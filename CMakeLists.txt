@@ -9,3 +9,45 @@ project(
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Sets both output directories to the same predictable location
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+list(APPEND CMAKE_PREFIX_PATH "C:/Program Files/NASM") # This should be replaced
+
+add_executable(${PROJECT_NAME} sdl_test/main.cpp)
+
+# Set the RPATH on apple and linux
+if(APPLE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+    INSTALL_RPATH "@executable_path;@loader_path"
+    BUILD_WITH_INSTALL_RPATH TRUE
+    MACOSX_RPATH TRUE
+    )
+elseif(UNIX)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+    INSTALL_RPATH "$ORIGIN"
+    BUILD_WITH_INSTALL_RPATH TRUE
+    )
+endif()
+
+if(WIN32)
+  set(MATH_LIBRARY "" CACHE STRING "" FORCE)
+endif()
+
+# Specify that we want to build SDL_TTF's dependencies
+set(SDLTTF_VENDORED ON) 
+
+# Set a variable for our vendor directory
+set(VENDOR_DIR "${PROJECT_SOURCE_DIR}/vendor") 
+
+# Add the SDL libraries from our submodules
+add_subdirectory(${VENDOR_DIR}/SDL) 
+add_subdirectory(${VENDOR_DIR}/SDL_image) 
+add_subdirectory(${VENDOR_DIR}/SDL_ttf)
+
+target_link_libraries(${PROJECT_NAME}
+    SDL3::SDL3
+    SDL3_image::SDL3_image
+    SDL3_ttf::SDL3_ttf
+)

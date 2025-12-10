@@ -3,10 +3,11 @@
     "configurePresets": [{
         "name": "default",
         "binaryDir": "build",
-        "generator": "MinGW Makefiles"
+        "generator": "Visual Studio 17 2022"
     }],
     "buildPresets": [{
         "name": "default",
-        "configurePreset": "default"
+        "configurePreset": "default",
+        "jobs": 12
     }]
 }
