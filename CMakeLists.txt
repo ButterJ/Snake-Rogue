@@ -13,7 +13,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Sets both output directories to the same predictable location
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
-list(APPEND CMAKE_PREFIX_PATH "C:/Program Files/NASM") # This should be replaced
+if(WIN32)
+    list(APPEND CMAKE_PREFIX_PATH "C:/Program Files/NASM") # This should be replaced
+endif()
 
 add_executable(${PROJECT_NAME} sdl_test/main.cpp)
 
