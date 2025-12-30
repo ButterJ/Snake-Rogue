@@ -1,0 +1,5 @@
+{
+    "editor.formatOnType": false,
+    "files.insertFinalNewline": true,
+    "C_Cpp.vcFormat.indent.accessSpecifiers": false
+}

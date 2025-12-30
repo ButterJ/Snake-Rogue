@@ -17,7 +17,7 @@ if(WIN32)
     list(APPEND CMAKE_PREFIX_PATH "C:/Program Files/NASM") # This should be replaced
 endif()
 
-add_executable(${PROJECT_NAME} sdl_test/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp)
 
 # Set the RPATH on apple and linux
 if(APPLE)
@@ -52,4 +52,12 @@ target_link_libraries(${PROJECT_NAME}
     SDL3::SDL3
     SDL3_image::SDL3_image
     SDL3_ttf::SDL3_ttf
+)
+
+# Copy data folder to build output directory
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${PROJECT_SOURCE_DIR}/data
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>/data
+    COMMENT "Copying data folder to build output directory"
 )
