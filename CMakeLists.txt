@@ -7,8 +7,9 @@ project(
     LANGUAGES CXX
 )
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Sets both output directories to the same predictable location
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
@@ -17,7 +18,9 @@ if(WIN32)
     list(APPEND CMAKE_PREFIX_PATH "C:/Program Files/NASM") # This should be replaced
 endif()
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+# Setting up the project source files
+file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+add_executable(${PROJECT_NAME} ${MY_SOURCES})
 
 # Set the RPATH on apple and linux
 if(APPLE)

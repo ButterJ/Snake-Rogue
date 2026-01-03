@@ -1,5 +1,9 @@
 {
     "editor.formatOnType": false,
     "files.insertFinalNewline": true,
-    "C_Cpp.vcFormat.indent.accessSpecifiers": false
+    "C_Cpp.vcFormat.indent.accessSpecifiers": false,
+    "C_Cpp.vcFormat.space.pointerReferenceAlignment": "left",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.cppStandard": "c++23",
+    "C_Cpp.default.compilerPath": "C:/mingw64/bin/gcc.exe"
 }
