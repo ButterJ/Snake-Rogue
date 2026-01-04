@@ -22,6 +22,15 @@ endif()
 file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 add_executable(${PROJECT_NAME} ${MY_SOURCES})
 
+file(GLOB_RECURSE HEADER_FILES "src/*.h" "src/*.hpp")
+foreach(header ${HEADER_FILES})
+    get_filename_component(dir ${header} DIRECTORY)
+    list(APPEND INCLUDE_DIRS ${dir})
+endforeach()
+list(REMOVE_DUPLICATES INCLUDE_DIRS)
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRS})
+
 # Set the RPATH on apple and linux
 if(APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES

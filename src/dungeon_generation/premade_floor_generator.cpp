@@ -4,8 +4,8 @@
 
 const std::unique_ptr<Floor> Premade_floor_generator::generate_floor() const
 {
-    constexpr int floor_rows = 50;
-    constexpr int floor_columns = 14;
+    constexpr int floor_rows = 14;
+    constexpr int floor_columns = 50;
     std::vector<Tile> tiles(floor_rows * floor_columns, Tile {Tile::Type::floor});
 
     std::mdspan tiles_view {tiles.data(), floor_rows, floor_columns}; // TODO: Don't use magic numbers

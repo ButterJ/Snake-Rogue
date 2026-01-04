@@ -72,10 +72,27 @@ const int Sdl_manager::update() // TODO: Replace exit codes
     SDL_RenderClear(state.renderer);
 
     render_map_tiles();
-
-    SDL_RenderPresent(state.renderer);
+    render_debug_texts();
 
     return 0; // SDL steps finished normally
+}
+
+void Sdl_manager::draw_snake(const Snake& snake) const
+{
+    const std::list<Body_part>& body_parts = snake.get_body_parts();
+
+    const int body_horizontal_index {0};
+    const int body_vertical_index {4};
+    const SDL_FRect source_rectangle {get_tile_source_rectangle(body_horizontal_index, body_vertical_index)};
+
+    for (Body_part body_part : body_parts)
+    {
+        const Position& position {body_part.get_position()};
+        const SDL_FRect destination_rectangle {.x = 12.8f * position.x, .y = 23.2f * position.y, .w = 12.8f, .h = 23.2f};
+        SDL_RenderTexture(state.renderer, tilemap_texture, &source_rectangle, &destination_rectangle);
+    }
+
+    SDL_RenderPresent(state.renderer);
 }
 
 void Sdl_manager::render_map_tiles()
@@ -120,11 +137,30 @@ void Sdl_manager::render_map_tiles()
                 source_y = tile_height * floor_tile_index_vertical;
             }
 
-            const SDL_FRect source_rectangle {.x = source_x, .y = source_y, .w = tile_width, .h = tile_height};        // TODO: Don't use magic numbers
-            const SDL_FRect destination_rectangle {.x = (12.8f * row), .y = (23.2f * column), .w = 12.8f, .h = 23.2f}; // TODO: Don't use magic numbers
+            const SDL_FRect source_rectangle {.x = source_x, .y = source_y, .w = tile_width, .h = tile_height};
+            const SDL_FRect destination_rectangle {.x = (12.8f * column), .y = (23.2f * row), .w = 12.8f, .h = 23.2f}; // TODO: Don't use magic numbers
             SDL_RenderTexture(state.renderer, tilemap_texture, &source_rectangle, &destination_rectangle);             // TODO: Add check if this function succeeds?
         }
     }
+}
+
+const SDL_FRect& Sdl_manager::get_tile_source_rectangle(int horizontal, int vertical) const
+{
+    const float source_x = tile_width * horizontal;
+    const float source_y = tile_height * vertical;
+    const SDL_FRect source_rectangle {.x = source_x, .y = source_y, .w = tile_width, .h = tile_height};
+
+    return source_rectangle;
+}
+
+void Sdl_manager::render_debug_texts()
+{
+    for (int i {0}; i < debug_texts.size(); i++)
+    {
+        SDL_RenderDebugText(state.renderer, 50, 50 + 50 * i, debug_texts[i].c_str());
+    }
+
+    debug_texts.clear();
 }
 
 const int Sdl_manager::handle_sdl_events()
@@ -144,6 +180,8 @@ const int Sdl_manager::handle_sdl_events()
         }
         }
     }
+
+    return 0;
 }
 
 void Sdl_manager::set_window_dimensions(int windowWidth, int windowHeight)
@@ -158,4 +196,9 @@ void Sdl_manager::cleanup()
     SDL_DestroyRenderer(state.renderer);
     SDL_DestroyWindow(state.window);
     SDL_Quit();
+}
+
+void Sdl_manager::add_debug_text(std::string debug_text)
+{
+    debug_texts.push_back(debug_text);
 }
