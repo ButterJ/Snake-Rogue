@@ -62,12 +62,6 @@ void Sdl_manager::destroy_textures()
 
 const int Sdl_manager::update() // TODO: Replace exit codes
 {
-    int event_exit_code = handle_sdl_events();
-    if (event_exit_code != 0)
-    {
-        return event_exit_code;
-    }
-
     SDL_SetRenderDrawColor(state.renderer, 200, 200, 200, 255);
     SDL_RenderClear(state.renderer);
 
@@ -81,14 +75,14 @@ void Sdl_manager::draw_snake(const Snake& snake) const
 {
     const std::list<Body_part>& body_parts = snake.get_body_parts();
 
-    const int body_horizontal_index {0};
-    const int body_vertical_index {4};
-    const SDL_FRect source_rectangle {get_tile_source_rectangle(body_horizontal_index, body_vertical_index)};
+    const int body_horizontal_index { 0 };
+    const int body_vertical_index { 4 };
+    const SDL_FRect source_rectangle { get_tile_source_rectangle(body_horizontal_index, body_vertical_index) };
 
     for (Body_part body_part : body_parts)
     {
-        const Position& position {body_part.get_position()};
-        const SDL_FRect destination_rectangle {.x = 12.8f * position.x, .y = 23.2f * position.y, .w = 12.8f, .h = 23.2f};
+        const Position& position { body_part.get_position() };
+        const SDL_FRect destination_rectangle { .x = 12.8f * position.x, .y = 23.2f * position.y, .w = 12.8f, .h = 23.2f };
         SDL_RenderTexture(state.renderer, tilemap_texture, &source_rectangle, &destination_rectangle);
     }
 
@@ -97,24 +91,24 @@ void Sdl_manager::draw_snake(const Snake& snake) const
 
 void Sdl_manager::render_map_tiles()
 {
-    std::unique_ptr<Premade_floor_generator> premade_floor_generator {std::make_unique<Premade_floor_generator>()};
-    std::unique_ptr<Floor> generated_floor {premade_floor_generator->generate_floor()};
+    std::unique_ptr<Premade_floor_generator> premade_floor_generator { std::make_unique<Premade_floor_generator>() };
+    std::unique_ptr<Floor> generated_floor { premade_floor_generator->generate_floor() };
 
     const std::vector<Tile>& tiles = generated_floor->get_tiles();
-    std::mdspan map_tiles_view {tiles.data(), generated_floor->get_rows(), generated_floor->get_columns()};
+    std::mdspan map_tiles_view { tiles.data(), generated_floor->get_rows(), generated_floor->get_columns() };
 
-    std::size_t rows {map_tiles_view.extents().extent(0)};
-    std::size_t columns {map_tiles_view.extents().extent(1)};
+    std::size_t rows { map_tiles_view.extents().extent(0) };
+    std::size_t columns { map_tiles_view.extents().extent(1) };
 
-    const auto tile_width {128.0f};
-    const auto tile_height {232.0f};
-    const auto tile_number_horizontal {16};
-    const auto tile_number_vertical {24};
+    const auto tile_width { 128.0f };
+    const auto tile_height { 232.0f };
+    const auto tile_number_horizontal { 16 };
+    const auto tile_number_vertical { 24 };
 
-    const auto wall_tile_index_horizontal {3};
-    const auto wall_tile_index_vertical {2};
-    const auto floor_tile_index_horizontal {0};
-    const auto floor_tile_index_vertical {8};
+    const auto wall_tile_index_horizontal { 3 };
+    const auto wall_tile_index_vertical { 2 };
+    const auto floor_tile_index_horizontal { 0 };
+    const auto floor_tile_index_vertical { 8 };
 
     // map_tiles_view.data_handle()[1]
 
@@ -122,7 +116,7 @@ void Sdl_manager::render_map_tiles()
     {
         for (std::size_t column = 0; column < columns; ++column)
         {
-            Tile::Type tile_type {map_tiles_view[row, column].type};
+            Tile::Type tile_type { map_tiles_view[row, column].type };
 
             float source_x {};
             float source_y {};
@@ -137,9 +131,9 @@ void Sdl_manager::render_map_tiles()
                 source_y = tile_height * floor_tile_index_vertical;
             }
 
-            const SDL_FRect source_rectangle {.x = source_x, .y = source_y, .w = tile_width, .h = tile_height};
-            const SDL_FRect destination_rectangle {.x = (12.8f * column), .y = (23.2f * row), .w = 12.8f, .h = 23.2f}; // TODO: Don't use magic numbers
-            SDL_RenderTexture(state.renderer, tilemap_texture, &source_rectangle, &destination_rectangle);             // TODO: Add check if this function succeeds?
+            const SDL_FRect source_rectangle { .x = source_x, .y = source_y, .w = tile_width, .h = tile_height };
+            const SDL_FRect destination_rectangle { .x = (12.8f * column), .y = (23.2f * row), .w = 12.8f, .h = 23.2f }; // TODO: Don't use magic numbers
+            SDL_RenderTexture(state.renderer, tilemap_texture, &source_rectangle, &destination_rectangle);               // TODO: Add check if this function succeeds?
         }
     }
 }
@@ -148,40 +142,19 @@ const SDL_FRect& Sdl_manager::get_tile_source_rectangle(int horizontal, int vert
 {
     const float source_x = tile_width * horizontal;
     const float source_y = tile_height * vertical;
-    const SDL_FRect source_rectangle {.x = source_x, .y = source_y, .w = tile_width, .h = tile_height};
+    const SDL_FRect source_rectangle { .x = source_x, .y = source_y, .w = tile_width, .h = tile_height };
 
     return source_rectangle;
 }
 
 void Sdl_manager::render_debug_texts()
 {
-    for (int i {0}; i < debug_texts.size(); i++)
+    for (int i { 0 }; i < debug_texts.size(); i++)
     {
         SDL_RenderDebugText(state.renderer, 50, 50 + 50 * i, debug_texts[i].c_str());
     }
 
     debug_texts.clear();
-}
-
-const int Sdl_manager::handle_sdl_events()
-{
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch (event.type)
-        {
-        case SDL_EVENT_QUIT:
-        {
-            return 1; // SDL Quit
-        }
-        case SDL_EVENT_WINDOW_RESIZED:
-        {
-            set_window_dimensions(event.window.data1, event.window.data2);
-        }
-        }
-    }
-
-    return 0;
 }
 
 void Sdl_manager::set_window_dimensions(int windowWidth, int windowHeight)
