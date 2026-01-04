@@ -10,9 +10,10 @@ void Sdl_manager::initialize()
 {
     try
     {
+        SDL_SetLogPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_DEBUG);
+        SDL_SetAppMetadata("Snake Rogue", "0.1.0", "Snake Rogue");
         SDL_InitSubSystem(SDL_INIT_VIDEO);
-        create_window();
-        create_renderer();
+        create_window_and_renderer();
         SDL_SetRenderLogicalPresentation(state.renderer, state.logical_width, state.logical_height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
         load_textures();
     }
@@ -23,36 +24,19 @@ void Sdl_manager::initialize()
     }
 }
 
-void Sdl_manager::create_window()
+void Sdl_manager::create_window_and_renderer()
 {
-    state.window = SDL_CreateWindow(state.window_name, state.window_width, state.window_height, SDL_WINDOW_RESIZABLE);
-
-    if (!state.window)
+    if (!SDL_CreateWindowAndRenderer(state.window_name, state.window_width, state.window_height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED, &state.window, &state.renderer))
     {
-        const char* error = SDL_GetError();
-        std::string error_message = std::format("Error creating window: {}", error);
-
-        throw error_message;
-    }
-}
-
-void Sdl_manager::create_renderer()
-{
-    state.renderer = SDL_CreateRenderer(state.window, nullptr);
-
-    if (!state.renderer)
-    {
-        const char* error = SDL_GetError();
-        std::string error_message = std::format("Error creating renderer: {}", error);
-
-        throw error_message;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
+        cleanup();
     }
 }
 
 void Sdl_manager::load_textures()
 {
     tilemap_texture = IMG_LoadTexture(state.renderer, "data/tiles.png");
-    SDL_SetTextureScaleMode(tilemap_texture, SDL_SCALEMODE_NEAREST);
+    SDL_SetTextureScaleMode(tilemap_texture, SDL_SCALEMODE_NEAREST); // TODO: Consider changing this to SDL_SCALEMODE_PIXELART
 }
 
 void Sdl_manager::destroy_textures()
@@ -60,15 +44,13 @@ void Sdl_manager::destroy_textures()
     SDL_DestroyTexture(tilemap_texture);
 }
 
-const int Sdl_manager::update() // TODO: Replace exit codes
+void Sdl_manager::update() // TODO: Replace exit codes
 {
     SDL_SetRenderDrawColor(state.renderer, 200, 200, 200, 255);
     SDL_RenderClear(state.renderer);
 
     render_map_tiles();
     render_debug_texts();
-
-    return 0; // SDL steps finished normally
 }
 
 void Sdl_manager::draw_snake(const Snake& snake) const
@@ -168,6 +150,7 @@ void Sdl_manager::cleanup()
     destroy_textures();
     SDL_DestroyRenderer(state.renderer);
     SDL_DestroyWindow(state.window);
+    SDL_QuitSubSystem(SDL_INIT_VIDEO);
     SDL_Quit();
 }
 

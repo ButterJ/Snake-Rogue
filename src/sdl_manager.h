@@ -26,13 +26,12 @@ class Sdl_manager : public Singleton<Sdl_manager>
     void initialize();
     void set_window_dimensions(int windowWidth, int windowHeight);
     void cleanup();
-    const int update();
+    void update();
     void draw_snake(const Snake& snake) const;
     void add_debug_text(std::string debug_text);
 
   private: // TODO: Need to clean up temporary things!
-    void create_window();
-    void create_renderer();
+    void create_window_and_renderer();
 
     void render_map_tiles();
     void render_debug_texts();
