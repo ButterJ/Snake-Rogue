@@ -24,7 +24,7 @@ class Sdl_manager : public Singleton<Sdl_manager>
 
   public:
     void initialize();
-    void set_window_dimensions(int windowWidth, int windowHeight);
+    const SDL_AppResult handle_event(const SDL_Event* const event);
     void cleanup();
     void update();
     void draw_snake(const Snake& snake) const;
@@ -33,6 +33,7 @@ class Sdl_manager : public Singleton<Sdl_manager>
   private: // TODO: Need to clean up temporary things!
     void create_window_and_renderer();
 
+    void set_window_dimensions(int windowWidth, int windowHeight);
     void render_map_tiles();
     void render_debug_texts();
     void load_textures();

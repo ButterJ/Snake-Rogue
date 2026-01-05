@@ -26,11 +26,28 @@ void Sdl_manager::initialize()
 
 void Sdl_manager::create_window_and_renderer()
 {
-    if (!SDL_CreateWindowAndRenderer(state.window_name, state.window_width, state.window_height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED, &state.window, &state.renderer))
+    if (!SDL_CreateWindowAndRenderer(state.window_name, state.window_width, state.window_height, SDL_WINDOW_RESIZABLE, &state.window, &state.renderer))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
         cleanup();
     }
+}
+
+const SDL_AppResult Sdl_manager::handle_event(const SDL_Event* const event)
+{
+    switch (event->type)
+    {
+        case SDL_EVENT_QUIT:
+        {
+            return SDL_APP_SUCCESS;
+        }
+        case SDL_EVENT_WINDOW_RESIZED:
+        {
+            set_window_dimensions(event->window.data1, event->window.data2);
+        }
+    }
+
+    return SDL_APP_CONTINUE;
 }
 
 void Sdl_manager::load_textures()
