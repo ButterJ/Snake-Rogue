@@ -70,9 +70,9 @@ void Sdl_manager::update() // TODO: Replace exit codes
     render_debug_texts();
 }
 
-void Sdl_manager::draw_snake(const Snake& snake) const
+void Sdl_manager::draw_snake(const std::shared_ptr<Snake> snake) const
 {
-    const std::list<Body_part>& body_parts = snake.get_body_parts();
+    const std::list<Body_part>& body_parts = snake->get_body_parts();
 
     const int body_horizontal_index { 0 };
     const int body_vertical_index { 4 };
@@ -137,7 +137,7 @@ void Sdl_manager::render_map_tiles()
     }
 }
 
-const SDL_FRect& Sdl_manager::get_tile_source_rectangle(int horizontal, int vertical) const
+const SDL_FRect Sdl_manager::get_tile_source_rectangle(int horizontal, int vertical) const
 {
     const float source_x = tile_width * horizontal;
     const float source_y = tile_height * vertical;

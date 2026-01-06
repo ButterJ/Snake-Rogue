@@ -5,6 +5,7 @@
 #include "tile.h"
 #include <SDL3/SDL.h>
 #include <cstddef>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -27,7 +28,7 @@ class Sdl_manager : public Singleton<Sdl_manager>
     const SDL_AppResult handle_event(const SDL_Event* const event);
     void cleanup();
     void update();
-    void draw_snake(const Snake& snake) const;
+    void draw_snake(const std::shared_ptr<Snake> snake) const;
     void add_debug_text(std::string debug_text);
 
   private: // TODO: Need to clean up temporary things!
@@ -43,7 +44,7 @@ class Sdl_manager : public Singleton<Sdl_manager>
     std::vector<std::string> debug_texts {};
 
     SDL_Texture* tilemap_texture {};
-    const SDL_FRect& get_tile_source_rectangle(int horizontal, int vertical) const;
+    const SDL_FRect get_tile_source_rectangle(int horizontal, int vertical) const;
 
     const float tile_width { 128.0f };
     const float tile_height { 232.0f };
