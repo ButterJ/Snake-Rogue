@@ -3,7 +3,13 @@
 class Turn_based_entity
 {
   public:
-    void tick();
+    enum Tick_result
+    {
+        none,
+        taking_turn
+    };
+
+    Tick_result tick();
 
   protected:
     virtual void take_turn() = 0;

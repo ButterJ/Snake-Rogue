@@ -1,5 +1,4 @@
 #include "snake.h"
-#include "game.h"
 #include "sdl_manager.h" //TODO: Temporary!
 #include <SDL3/SDL_keyboard.h>
 #include <string>
@@ -30,7 +29,7 @@ void Snake::move(const Direction& direction) // TODO: Shouldnt be able to move w
     }
 }
 
-Snake::Input_result Snake::process_input()
+const Snake::Input_result Snake::process_input()
 {
     // Sdl_manager& sdl_manager { Sdl_manager::get_instance() };
 
@@ -68,5 +67,4 @@ Snake::Input_result Snake::process_input()
 
 void Snake::take_turn()
 {
-    Game::get_instance().set_player_turn();
 }

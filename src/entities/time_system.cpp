@@ -1,20 +1,58 @@
 #include "time_system.h"
 #include "i_player_entity.h"
 #include <SDL3/SDL_log.h>
+#include <assert.h>
 
-void Time_system::tick() // TODO: Fix problem that if two entities have their turn in the same tick the entity that entered the vector first does their turn first
+const Time_system::Process_result Time_system::process_entity_turns()
 {
-    for (auto turn_based_entity : player_entities)
+    Process_result process_result { tick_player_controlled_entities() };
+
+    if (process_result == require_player_input)
     {
-        if (turn_based_entity.expired())
+        return process_result;
+    }
+
+    tick_other_entities();
+}
+
+Time_system::Process_result Time_system::tick_player_controlled_entities() // TODO: This function needs to be refactored (split up and unnecessary stuff removed)
+{
+    if (player_controlled_entities.size() == 0) // Currently the time system is interrupted by players needing to input something. Without player entities the system will never be interrupted. // TODO: Consider making the time system not rely on player entities existing
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "There are no player entities to process.");
+        throw;
+    }
+
+    for (auto player_controlled_entity : player_controlled_entities)
+    {
+        assert(!player_controlled_entity.expired() && "Trying to tick an expired turn based entity");
+
+        auto locked_player_controlled_entity { player_controlled_entity.lock() };
+
+        if (locked_player_controlled_entity->is_processed)
         {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Trying to tick an expired turn based entity");
             continue;
         }
 
-        turn_based_entity.lock()->tick();
+        locked_player_controlled_entity->is_processed = true;
+        Turn_based_entity::Tick_result entity_tick_result { locked_player_controlled_entity->tick() };
+
+        if (entity_tick_result == Turn_based_entity::Tick_result::taking_turn)
+        {
+            return require_player_input;
+        }
     }
 
+    for (auto player_controlled_entity : player_controlled_entities) // TODO: Maybe replace with forall?
+    {
+        player_controlled_entity.lock()->is_processed = false;
+    }
+
+    return continue_processing;
+}
+
+void Time_system::tick_other_entities()
+{
     for (auto turn_based_entity : other_entities)
     {
         if (turn_based_entity.expired())
@@ -35,9 +73,11 @@ void Time_system::register_entity(std::weak_ptr<Turn_based_entity> turn_based_en
         return;
     }
 
-    if (dynamic_cast<I_player_entity*>(turn_based_entity.lock().get()))
+    std::weak_ptr<Player_controlled_entity> player_controlled_entity { std::dynamic_pointer_cast<Player_controlled_entity>(turn_based_entity.lock()) };
+
+    if (player_controlled_entity.lock())
     {
-        player_entities.push_back(turn_based_entity);
+        player_controlled_entities.push_back(player_controlled_entity);
         return;
     }
 
@@ -69,7 +109,7 @@ void Time_system::release_entity(std::weak_ptr<Turn_based_entity> turn_based_ent
 
     if (dynamic_cast<I_player_entity*>(turn_based_entity.lock().get()))
     {
-        player_entities.remove_if(lambda);
+        player_controlled_entities.remove_if(lambda);
         return;
     }
 
