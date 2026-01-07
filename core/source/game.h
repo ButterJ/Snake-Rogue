@@ -1,6 +1,8 @@
 #pragma once
 
 #include "layer.h"
+#include "sdl_manager.h"
+#include "singleton.h"
 
 #include <memory>
 #include <vector>
@@ -8,12 +10,14 @@
 namespace Core
 {
 
-class Game
+class Game : public Singleton<Game>
 {
   public:
     void start();
     void update();
     void stop();
+
+    Sdl_manager& get_sdl_manager();
 
     // TODO: Understand push layer and see if I can reorganize it into header and source
     template <typename TLayer>
@@ -37,8 +41,8 @@ class Game
 
   private:
     uint64_t previous_time {};
-
-    std::vector<std::unique_ptr<Layer>> layer_stack;
+    std::vector<std::unique_ptr<Layer>> layer_stack {};
+    Sdl_manager sdl_manager {};
 };
 
 } // namespace Core

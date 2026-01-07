@@ -6,6 +6,8 @@ namespace Core
 {
 void Game::start()
 {
+    sdl_manager.initialize();
+
     previous_time = SDL_GetTicks();
 
     for (const std::unique_ptr<Layer>& layer : layer_stack)
@@ -34,6 +36,13 @@ void Game::stop()
     {
         layer->on_stop();
     }
+
+    sdl_manager.cleanup();
+}
+
+Sdl_manager& Game::get_sdl_manager()
+{
+    return sdl_manager;
 }
 
 } // namespace Core
