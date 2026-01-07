@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 
 project(
-    SDL_Test
+    snake_rogue
     VERSION 1.0
     DESCRIPTION "A traditional roguelike where the player plays as a snake"
     LANGUAGES CXX
