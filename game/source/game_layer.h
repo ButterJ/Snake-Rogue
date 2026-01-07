@@ -1,19 +1,18 @@
 #pragma once
 
 #include "enemy.h"
+#include "layer.h"
 #include "sdl_manager.h"
-#include "singleton.h"
 #include "snake.h"
 #include "time_system.h"
-#include <cstdint>
-#include <memory>
 
-class Game : public Singleton<Game>
+class Game_layer : public Core::Layer
 {
-  public:
-    void initialize();
-    void update();
-    void cleanup();
+  public: // TODO: Rename these function to on_...
+    void on_start() override;
+    void on_update(float delta_time) override;
+    void on_render() override;
+    void on_stop() override;
 
   private:
     void process_turn();

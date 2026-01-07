@@ -14,7 +14,7 @@ void Sdl_manager::initialize()
         SDL_SetAppMetadata("Snake Rogue", "0.1.0", "Snake Rogue");
         SDL_InitSubSystem(SDL_INIT_VIDEO);
         create_window_and_renderer();
-        SDL_SetRenderLogicalPresentation(state.renderer, state.logical_width, state.logical_height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+        SDL_SetRenderLogicalPresentation(state.renderer, state.window_specification.logical_width, state.window_specification.logical_height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
         load_textures();
     }
     catch (std::string error_message)
@@ -26,7 +26,7 @@ void Sdl_manager::initialize()
 
 void Sdl_manager::create_window_and_renderer()
 {
-    if (!SDL_CreateWindowAndRenderer(state.window_name, state.window_width, state.window_height, SDL_WINDOW_RESIZABLE, &state.window, &state.renderer))
+    if (!SDL_CreateWindowAndRenderer(state.window_specification.window_name, state.window_specification.window_width, state.window_specification.window_height, SDL_WINDOW_RESIZABLE, &state.window, &state.renderer))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
         cleanup();
@@ -158,8 +158,8 @@ void Sdl_manager::render_debug_texts()
 
 void Sdl_manager::set_window_dimensions(int windowWidth, int windowHeight)
 {
-    state.window_width = windowWidth;
-    state.window_height = windowHeight;
+    state.window_specification.window_width = windowWidth;
+    state.window_specification.window_height = windowHeight;
 }
 
 void Sdl_manager::cleanup()

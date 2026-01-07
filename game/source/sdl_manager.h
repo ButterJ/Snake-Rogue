@@ -12,15 +12,20 @@
 class Sdl_manager : public Singleton<Sdl_manager>
 {
   private:
-    struct Sdl_state
+    struct Window_specification
     {
-        SDL_Window* window {};
-        SDL_Renderer* renderer {};
+        const char* window_name { "Snake Rogue" };
         int window_width { 1600 };
         int window_height { 900 };
         int logical_width { 640 };
         int logical_height { 320 };
-        const char* window_name { "Snake Rogue" };
+    };
+
+    struct Sdl_state
+    {
+        SDL_Window* window {};
+        SDL_Renderer* renderer {};
+        Window_specification window_specification {};
     };
 
   public:

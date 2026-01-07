@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.23)
 project(
     SDL_Test
     VERSION 1.0
-    DESCRIPTION "A simple SDL3 test project"
+    DESCRIPTION "A traditional roguelike where the player plays as a snake"
     LANGUAGES CXX
 )
 
@@ -19,10 +19,10 @@ if(WIN32)
 endif()
 
 # Setting up the project source files
-file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/game/source/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/core/source/*.cpp")
 add_executable(${PROJECT_NAME} ${MY_SOURCES})
 
-file(GLOB_RECURSE HEADER_FILES "src/*.h" "src/*.hpp")
+file(GLOB_RECURSE HEADER_FILES "game/source/*.h" "core/source/*h")
 foreach(header ${HEADER_FILES})
     get_filename_component(dir ${header} DIRECTORY)
     list(APPEND INCLUDE_DIRS ${dir})
@@ -69,7 +69,7 @@ target_link_libraries(${PROJECT_NAME}
 # Copy data folder to build output directory
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${PROJECT_SOURCE_DIR}/data
+    ${PROJECT_SOURCE_DIR}/game/data
     $<TARGET_FILE_DIR:${PROJECT_NAME}>/data
     COMMENT "Copying data folder to build output directory"
 )

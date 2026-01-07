@@ -13,6 +13,7 @@ const Time_system::Process_result Time_system::process_entity_turns()
     }
 
     tick_other_entities();
+    return continue_processing;
 }
 
 Time_system::Process_result Time_system::tick_player_controlled_entities() // TODO: This function needs to be refactored (split up and unnecessary stuff removed)
