@@ -53,7 +53,7 @@ endif()
 set(SDLTTF_VENDORED ON) 
 
 # Set a variable for our vendor directory
-set(VENDOR_DIR "${PROJECT_SOURCE_DIR}/vendor") 
+set(VENDOR_DIR "${PROJECT_SOURCE_DIR}/core/vendor") 
 
 # Add the SDL libraries from our submodules
 add_subdirectory(${VENDOR_DIR}/SDL) 
