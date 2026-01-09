@@ -6,17 +6,10 @@ Sprite_component::Sprite_component(Sprite_specification p_sprite_specification, 
     // sprite_renderer.register_sprite_component(std::make_shared<Sprite_component>(this));
 }
 
-// Sprite_component::~Sprite_component()
-// {
-//     sprite_renderer.release_sprite_component(std::make_shared<Sprite_component>(this));
-// }
-
-const Sprite_specification& Sprite_component::get_sprite_specification() const
+void Sprite_component::render()
 {
-    return sprite_specification;
-}
+    const Position& position { transform_component.get()->position };
+    const SDL_FRect destination_rectangle { .x = 12.8f * position.x, .y = 23.2f * position.y, .w = 12.8f, .h = 23.2f }; // TODO: Need to replace magic numbers
 
-const std::shared_ptr<const Transform_component> Sprite_component::get_transform_component() const
-{
-    return transform_component;
+    SDL_RenderTexture(sdl_manager.get_state().renderer, &sdl_manager.get_texture(sprite_specification.texture_file_path), &sprite_specification.texture_source_rectangle, &destination_rectangle);
 }

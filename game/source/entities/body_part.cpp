@@ -9,3 +9,8 @@ void Body_part::move(const Direction& direction)
 {
     transform_component.get()->position += direction;
 }
+
+void Body_part::render()
+{
+    sprite_component.get()->render();
+}

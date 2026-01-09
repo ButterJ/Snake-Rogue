@@ -1,33 +1,16 @@
 #include "snake.h"
+#include "game.h"
 #include "sdl_manager.h" //TODO: Temporary!
+#include "test_layer.h"
+
 #include <SDL3/SDL_keyboard.h>
+
 #include <string>
 
-Snake::Snake(int number_of_body_parts, Sprite_renderer& p_sprite_renderer, Sprite_specification p_sprite_specification)
-    : sprite_renderer { p_sprite_renderer }, sprite_specification { p_sprite_specification }
-{
-    current_energy = turn_energy_cost; // So that the player is first. // TODO: Might need to change this
-
-    for (int i = 0; i < number_of_body_parts; i++)
-    {
-        add_body_part();
-    }
-}
-
-void Snake::add_body_part()
-{
-    auto transform_component = std::make_shared<Transform_component>();
-    auto sprite_component = std::make_shared<Sprite_component>(sprite_specification, transform_component);
-    auto body_part = std::make_shared<Body_part>(sprite_component, transform_component);
-    body_parts.push_back(body_part);
-
-    sprite_renderer.register_sprite_component(sprite_component);
-}
-
-const std::list<std::shared_ptr<Body_part>>& Snake::get_body_parts() const
-{
-    return body_parts;
-}
+// const std::list<std::shared_ptr<Body_part>>& Snake::get_body_parts() const
+// {
+//     return body_parts;
+// }
 
 void Snake::move(const Direction& direction) // TODO: Shouldnt be able to move without body parts (being dead)
                                              // TODO: Also clean up this whole pointer syntax mess
@@ -86,8 +69,4 @@ const Snake::Input_result Snake::process_input()
     }
 
     return none;
-}
-
-void Snake::take_turn()
-{
 }

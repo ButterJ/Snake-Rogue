@@ -7,3 +7,6 @@
 [submodule "core/vendor/SDL_ttf"]
 	path = core/vendor/SDL_ttf
 	url = https://github.com/libsdl-org/SDL_ttf.git
+[submodule "core/vendor/eventpp"]
+	path = core/vendor/eventpp
+	url = https://github.com/wqking/eventpp.git

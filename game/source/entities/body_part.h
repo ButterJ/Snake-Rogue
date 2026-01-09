@@ -22,6 +22,8 @@ class Body_part
 
     void move(const Direction& direction);
 
+    void render();
+
     std::shared_ptr<Transform_component> get_transform_component();
 
   private:

@@ -1,7 +1,9 @@
 #pragma once
 
 #include "component.h"
+#include "game.h"
 #include "position.h"
+#include "sdl_manager.h"
 #include "sprite_specification.h"
 #include "transform_component.h"
 
@@ -12,13 +14,12 @@ class Sprite_component : public Component
 {
   public:
     Sprite_component(Sprite_specification p_sprite_specification, std::shared_ptr<Transform_component> p_transform_component);
-    // ~Sprite_component();
 
-    const Sprite_specification& get_sprite_specification() const;
-    const std::shared_ptr<const Transform_component> get_transform_component() const;
+    void render();
 
   private:
     Sprite_specification sprite_specification;
     std::shared_ptr<Transform_component> transform_component;
-    // Sprite_renderer& sprite_renderer;
+
+    Core::Sdl_manager& sdl_manager { Core::Game::get_instance().get_sdl_manager() };
 };

@@ -59,11 +59,13 @@ set(VENDOR_DIR "${PROJECT_SOURCE_DIR}/core/vendor")
 add_subdirectory(${VENDOR_DIR}/SDL) 
 add_subdirectory(${VENDOR_DIR}/SDL_image) 
 add_subdirectory(${VENDOR_DIR}/SDL_ttf)
+add_subdirectory(${VENDOR_DIR}/eventpp)
 
 target_link_libraries(${PROJECT_NAME}
     SDL3::SDL3
     SDL3_image::SDL3_image
     SDL3_ttf::SDL3_ttf
+    eventpp::eventpp
 )
 
 # Copy data folder to build output directory
