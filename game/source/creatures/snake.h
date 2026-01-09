@@ -16,6 +16,7 @@ class Snake : public Player_controlled_creature
 {
   public:
     const Input_result process_input() override;
-    // const std::list<std::shared_ptr<Body_part>>& get_body_parts() const;
+
+    void set_position(const Position& position) override;
     void move(const Direction& direction) override;
 };

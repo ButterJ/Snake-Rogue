@@ -11,6 +11,7 @@
 #include "turn_based_system.h"
 
 #include <memory>
+#include <vector>
 
 class Dungeon_layer : public Core::Layer
 {
@@ -23,8 +24,8 @@ class Dungeon_layer : public Core::Layer
   private:
     void render_map_tiles();
 
-    std::shared_ptr<Snake> snake;
-    std::shared_ptr<Enemy> enemy;
+    std::shared_ptr<Snake> snake {};
+    std::shared_ptr<Enemy> enemy {};
 
     Turn_based_system turn_based_system {};
 

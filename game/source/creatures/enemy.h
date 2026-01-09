@@ -14,4 +14,5 @@ class Enemy : public Game_controlled_creature // TODO: Right now this is a class
 {
   public:
     void take_turn() override;
+    void set_position(const Position& position) override;
 };

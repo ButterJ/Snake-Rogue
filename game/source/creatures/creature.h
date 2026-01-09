@@ -3,6 +3,7 @@
 #include "body_part.h"
 #include "direction.h"
 #include "i_renderable.h"
+#include "position.h"
 #include "turn_based_entity.h"
 
 #include <concepts>
@@ -16,6 +17,7 @@ class Creature : public T_turn_based_entity, public I_renderable // TODO: Add ma
   public:
     virtual void move(const Direction& direction) = 0;
     virtual void add_body_part(std::shared_ptr<Body_part> body_part) = 0;
+    virtual void set_position(const Position& position) = 0;
 
   protected:
     std::list<std::shared_ptr<Body_part>> body_parts {};
