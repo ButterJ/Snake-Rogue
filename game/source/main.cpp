@@ -3,14 +3,14 @@
 
 #include "game.h"
 // #include "game_layer.h"
+#include "dungeon_layer.h"
 #include "sdl_manager.h"
-#include "test_layer.h"
 
 #include <SDL3/SDL_main.h>
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv)
 {
-    Core::Game::get_instance().push_layer<Test_layer>();
+    Core::Game::get_instance().push_layer<Dungeon_layer>();
     Core::Game::get_instance().start();
 
     return SDL_APP_CONTINUE;

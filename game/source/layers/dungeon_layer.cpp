@@ -1,4 +1,4 @@
-#include "test_layer.h"
+#include "dungeon_layer.h"
 
 #include "creature_builder.h"
 #include "player_controlled_entity.h"
@@ -7,7 +7,7 @@
 #include <SDL3_image/SDL_image.h>
 #include <memory>
 
-void Test_layer::on_start()
+void Dungeon_layer::on_start()
 {
     // Adding player snake
     Creature_builder<Snake> snake_builder {};
@@ -21,29 +21,26 @@ void Test_layer::on_start()
     turn_based_system.register_entity(enemy);
 }
 
-void Test_layer::on_update(float delta_time)
+void Dungeon_layer::on_update(float delta_time)
 {
     turn_based_system.update(delta_time);
 }
 
-void Test_layer::on_render()
+void Dungeon_layer::on_render()
 {
+    const Core::Sdl_manager::State& sdl_manager_state { Core::Game::get_instance().get_sdl_manager().get_state() };
+
     SDL_SetRenderDrawColor(sdl_manager_state.renderer, 200, 200, 200, 255);
     SDL_RenderClear(sdl_manager_state.renderer);
 
     render_map_tiles();
     snake.get()->render();
     enemy.get()->render();
-    // sprite_renderer.render_sprites();
 
     SDL_RenderPresent(sdl_manager_state.renderer);
 }
 
-void Test_layer::on_stop()
-{
-}
-
-void Test_layer::render_map_tiles()
+void Dungeon_layer::render_map_tiles()
 {
     const std::vector<Tile>& tiles { generated_floor->get_tiles() };
 
@@ -51,4 +48,8 @@ void Test_layer::render_map_tiles()
     {
         tile.render();
     }
+}
+
+void Dungeon_layer::on_stop()
+{
 }
