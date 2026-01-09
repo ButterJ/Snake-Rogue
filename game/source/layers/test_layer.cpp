@@ -31,6 +31,7 @@ void Test_layer::on_render()
     SDL_SetRenderDrawColor(sdl_manager_state.renderer, 200, 200, 200, 255);
     SDL_RenderClear(sdl_manager_state.renderer);
 
+    render_map_tiles();
     snake.get()->render();
     enemy.get()->render();
     // sprite_renderer.render_sprites();
@@ -40,4 +41,14 @@ void Test_layer::on_render()
 
 void Test_layer::on_stop()
 {
+}
+
+void Test_layer::render_map_tiles()
+{
+    const std::vector<Tile>& tiles { generated_floor->get_tiles() };
+
+    for (auto tile : tiles)
+    {
+        tile.render();
+    }
 }
