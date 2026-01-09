@@ -2,13 +2,22 @@
 #include "floor.h"
 #include "premade_floor_generator.h"
 #include "sdl_manager.h"
+#include "sprite_component.h"
+#include "transform_component.h"
 #include <SDL3_image/SDL_image.h>
 #include <mdspan>
 
 void Game_layer::on_start()
 {
     previous_time = SDL_GetTicks();
+
     time_system.register_entity(snake);
+
+    auto sprite_component_enemy = std::make_shared<Sprite_component>();
+    auto transform_component_enemy = std::make_shared<Transform_component>();
+
+    enemy = std::make_shared<Enemy>(sprite_component_enemy, transform_component_enemy);
+
     time_system.register_entity(enemy);
     load_textures();
 }
@@ -26,6 +35,7 @@ void Game_layer::on_render() // TODO
     render_map_tiles();
     draw_snake(snake);
     render_debug_texts();
+    SDL_RenderPresent(sdl_manager_state.renderer);
 }
 
 void Game_layer::load_textures()
@@ -90,20 +100,18 @@ void Game_layer::render_map_tiles()
 
 void Game_layer::draw_snake(const std::shared_ptr<Snake> snake) const
 {
-    const std::list<Body_part>& body_parts = snake->get_body_parts();
+    const auto body_parts = snake->get_body_parts();
 
     const int body_horizontal_index { 0 };
     const int body_vertical_index { 4 };
     const SDL_FRect source_rectangle { get_tile_source_rectangle(body_horizontal_index, body_vertical_index) };
 
-    for (Body_part body_part : body_parts)
+    for (const auto& body_part : body_parts)
     {
-        const Position& position { body_part.get_position() };
+        const Position& position { body_part->get_position() };
         const SDL_FRect destination_rectangle { .x = 12.8f * position.x, .y = 23.2f * position.y, .w = 12.8f, .h = 23.2f };
         SDL_RenderTexture(sdl_manager_state.renderer, tilemap_texture, &source_rectangle, &destination_rectangle);
     }
-
-    SDL_RenderPresent(sdl_manager_state.renderer);
 }
 
 const SDL_FRect Game_layer::get_tile_source_rectangle(int horizontal, int vertical) const
@@ -146,9 +154,9 @@ void Game_layer::process_turn()
 
     if (!is_player_turn)
     {
-        Time_system::Process_result process_result { time_system.process_entity_turns() };
+        Turn_based_system::Process_result process_result { time_system.process_entity_turns() };
 
-        if (process_result == Time_system::Process_result::require_player_input)
+        if (process_result == Turn_based_system::Process_result::require_player_input)
         {
             is_player_turn = true;
         }

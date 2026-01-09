@@ -2,6 +2,9 @@
 
 #include <SDL3/SDL.h>
 
+#include <filesystem>
+#include <map>
+
 namespace Core
 {
 
@@ -29,12 +32,16 @@ namespace Core
         void cleanup();
 
         const State& get_state() const;
+        SDL_Texture& get_texture(std::filesystem::path file_path);
 
       private:
         void create_window_and_renderer();
         void set_window_dimensions(int windowWidth, int windowHeight);
+        SDL_Texture* load_texture(std::filesystem::path file_path);
 
         State state {};
+
+        std::map<std::filesystem::path, SDL_Texture*> loaded_textures {};
     };
 
 } // namespace Core

@@ -1,19 +1,24 @@
 #pragma once
 
-template <typename T>
-class Singleton
+namespace Core
 {
-  public:
-    static T& get_instance()
+
+    template <typename T>
+    class Singleton
     {
-        static T instance;
-        return instance;
-    }
+      public:
+        static T& get_instance()
+        {
+            static T instance;
+            return instance;
+        }
 
-    Singleton(const Singleton&) = delete;
-    void operator=(const Singleton&) = delete;
+        Singleton(const Singleton&) = delete;
+        void operator=(const Singleton&) = delete;
 
-  protected:
-    Singleton() {}
-    ~Singleton() {}
-};
+      protected:
+        Singleton() {}
+        ~Singleton() {}
+    };
+
+} // namespace Core

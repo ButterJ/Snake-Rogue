@@ -1,5 +1,6 @@
 #include "sdl_manager.h"
 
+#include <SDL3_image/SDL_image.h>
 #include <string>
 
 namespace Core
@@ -57,6 +58,26 @@ namespace Core
     const Sdl_manager::State& Sdl_manager::get_state() const
     {
         return state;
+    }
+
+    SDL_Texture& Sdl_manager::get_texture(std::filesystem::path file_path)
+    {
+        if (loaded_textures.contains(file_path))
+        {
+            return *loaded_textures[file_path];
+        }
+
+        SDL_Texture* loaded_texture { load_texture(file_path) };
+
+        return *loaded_texture;
+    }
+
+    SDL_Texture* Sdl_manager::load_texture(std::filesystem::path file_path)
+    {
+        SDL_Texture* loaded_texture { IMG_LoadTexture(state.renderer, file_path.string().c_str()) };
+        loaded_textures[file_path] = loaded_texture;
+
+        return loaded_texture;
     }
 
     void Sdl_manager::cleanup()

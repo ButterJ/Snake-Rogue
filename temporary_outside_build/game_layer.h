@@ -5,13 +5,14 @@
 #include "layer.h"
 #include "sdl_manager.h"
 #include "snake.h"
+#include "sprite_renderer.h"
 #include "time_system.h"
 
 #include <string>
 
 class Game_layer : public Core::Layer
 {
-  public: // TODO: Rename these function to on_...
+  public:
     void on_start() override;
     void on_update(float delta_time) override;
     void on_render() override;
@@ -28,13 +29,13 @@ class Game_layer : public Core::Layer
 
     bool is_player_turn { true };
     uint64_t previous_time {};
-    Time_system time_system {};
+    Turn_based_system time_system {};
 
     float delta_time {};
     const float delay_after_input { 0.1f }; // TODO: Consider moving this
     float current_input_delay { 0.0f };
-    std::shared_ptr<Snake> snake { std::make_shared<Snake>(3) }; // TODO: Move this
-    std::shared_ptr<Enemy> enemy { std::make_shared<Enemy>() };
+    std::shared_ptr<Snake> snake { std::make_shared<Snake>(3, sprite_renderer) }; // TODO: Move this
+    std::shared_ptr<Enemy> enemy;
 
     // TODO: Needs to move
     void render_map_tiles();
@@ -54,4 +55,6 @@ class Game_layer : public Core::Layer
     const float tile_height { 232.0f };
     const int tile_number_horizontal { 16 };
     const int tile_number_vertical { 24 };
+
+    const Sprite_renderer sprite_renderer {};
 };

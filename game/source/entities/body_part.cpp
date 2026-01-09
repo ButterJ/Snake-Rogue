@@ -1,11 +1,11 @@
 #include "body_part.h"
 
-const Position& Body_part::get_position() const
+std::shared_ptr<Transform_component> Body_part::get_transform_component()
 {
-    return position;
+    return transform_component;
 }
 
-void Body_part::set_position(const Position& position)
+void Body_part::move(const Direction& direction)
 {
-    this->position = position;
+    transform_component.get()->position += direction;
 }

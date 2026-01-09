@@ -1,9 +1,46 @@
-#include "time_system.h"
+#include "turn_based_system.h"
 #include "i_player_entity.h"
 #include <SDL3/SDL_log.h>
 #include <assert.h>
 
-const Time_system::Process_result Time_system::process_entity_turns()
+void Turn_based_system::update(float delta_time)
+{
+    if (is_waiting_for_input_cooldown())
+    {
+        current_input_delay += delta_time;
+        return;
+    }
+
+    if (!is_player_turn)
+    {
+        Turn_based_system::Process_result process_result { process_entity_turns() };
+
+        if (process_result == Turn_based_system::Process_result::require_player_input)
+        {
+            is_player_turn = true;
+        }
+    }
+
+    if (is_player_turn)
+    {
+        assert(!current_player_controlled_entity.expired() && "Trying to process input for an expired turn based entity");
+
+        Player_controlled_entity::Input_result input_result { current_player_controlled_entity.lock()->process_input() };
+
+        if (input_result == Player_controlled_entity::Input_result::turn_finished) // TODO: Consider turning body into a function
+        {
+            is_player_turn = false;
+            current_input_delay = 0.0f;
+        }
+    }
+}
+
+const bool Turn_based_system::is_waiting_for_input_cooldown() const
+{
+    return current_input_delay < delay_after_input;
+}
+
+const Turn_based_system::Process_result Turn_based_system::process_entity_turns()
 {
     Process_result process_result { tick_player_controlled_entities() };
 
@@ -16,7 +53,7 @@ const Time_system::Process_result Time_system::process_entity_turns()
     return continue_processing;
 }
 
-Time_system::Process_result Time_system::tick_player_controlled_entities() // TODO: This function needs to be refactored (split up and unnecessary stuff removed)
+Turn_based_system::Process_result Turn_based_system::tick_player_controlled_entities() // TODO: This function needs to be refactored (split up and unnecessary stuff removed)
 {
     if (player_controlled_entities.size() == 0) // Currently the time system is interrupted by players needing to input something. Without player entities the system will never be interrupted. // TODO: Consider making the time system not rely on player entities existing
     {
@@ -40,6 +77,7 @@ Time_system::Process_result Time_system::tick_player_controlled_entities() // TO
 
         if (entity_tick_result == Turn_based_entity::Tick_result::taking_turn)
         {
+            current_player_controlled_entity = player_controlled_entity;
             return require_player_input;
         }
     }
@@ -52,7 +90,7 @@ Time_system::Process_result Time_system::tick_player_controlled_entities() // TO
     return continue_processing;
 }
 
-void Time_system::tick_other_entities()
+void Turn_based_system::tick_other_entities()
 {
     for (auto turn_based_entity : other_entities)
     {
@@ -66,7 +104,7 @@ void Time_system::tick_other_entities()
     }
 }
 
-void Time_system::register_entity(std::weak_ptr<Turn_based_entity> turn_based_entity)
+void Turn_based_system::register_entity(std::weak_ptr<Turn_based_entity> turn_based_entity)
 {
     if (turn_based_entity.expired())
     {
@@ -85,7 +123,7 @@ void Time_system::register_entity(std::weak_ptr<Turn_based_entity> turn_based_en
     other_entities.push_back(turn_based_entity);
 }
 
-void Time_system::release_entity(std::weak_ptr<Turn_based_entity> turn_based_entity)
+void Turn_based_system::release_entity(std::weak_ptr<Turn_based_entity> turn_based_entity)
 {
     if (turn_based_entity.expired())
     {
