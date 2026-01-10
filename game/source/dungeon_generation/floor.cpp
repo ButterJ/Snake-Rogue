@@ -2,7 +2,7 @@
 
 #include <mdspan>
 
-const std::vector<Tile>& Floor::get_tiles() const
+const std::vector<Environment_object>& Floor::get_tiles() const
 {
     return tiles;
 }

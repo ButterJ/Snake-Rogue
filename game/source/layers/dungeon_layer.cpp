@@ -49,7 +49,7 @@ void Dungeon_layer::on_render() // TODO: Remove test functionality
 
 void Dungeon_layer::render_map_tiles()
 {
-    const std::vector<Tile>& tiles { current_floor->get_tiles() };
+    const std::vector<Environment_object>& tiles { current_floor->get_tiles() };
 
     for (auto tile : tiles)
     {
