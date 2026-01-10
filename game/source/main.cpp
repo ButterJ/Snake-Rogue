@@ -1,9 +1,8 @@
 // Use SDL_MAIN_USE_CALLBACK to replace the main function with specific SDL functions
 #define SDL_MAIN_USE_CALLBACKS 1
 
-#include "game.h"
-// #include "game_layer.h"
 #include "dungeon_layer.h"
+#include "game.h"
 #include "sdl_manager.h"
 
 #include <SDL3/SDL_main.h>

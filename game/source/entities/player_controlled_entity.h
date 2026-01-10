@@ -8,7 +8,8 @@ class Player_controlled_entity : public Turn_based_entity
     enum Input_result
     {
         none,
-        turn_finished
+        turn_finished,
+        invalid_action
     };
 
     virtual const Input_result process_input() = 0;

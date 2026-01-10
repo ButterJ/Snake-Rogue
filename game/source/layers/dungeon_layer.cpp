@@ -10,6 +10,8 @@
 
 void Dungeon_layer::on_start() // TODO: Replace test functionality
 {
+    current_floor = premade_floor_generator->generate_floor(14, 50);
+
     // Adding player snake
     Creature_builder<Snake> snake_builder {};
     snake_builder.create_creature(3);
@@ -47,7 +49,7 @@ void Dungeon_layer::on_render() // TODO: Remove test functionality
 
 void Dungeon_layer::render_map_tiles()
 {
-    const std::vector<Tile>& tiles { generated_floor->get_tiles() };
+    const std::vector<Tile>& tiles { current_floor->get_tiles() };
 
     for (auto tile : tiles)
     {
@@ -57,4 +59,9 @@ void Dungeon_layer::render_map_tiles()
 
 void Dungeon_layer::on_stop()
 {
+}
+
+std::shared_ptr<Floor> Dungeon_layer::get_current_floor()
+{
+    return current_floor;
 }

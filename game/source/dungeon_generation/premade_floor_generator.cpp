@@ -2,73 +2,50 @@
 #include "tile.h"
 #include <mdspan>
 
-const std::shared_ptr<Floor> Premade_floor_generator::generate_floor() const
+const std::shared_ptr<Floor> Premade_floor_generator::generate_floor(int floor_rows, int floor_columns) // TODO: This function cannot be resused right now
 {
-    constexpr int floor_rows = 14;
-    constexpr int floor_columns = 50;
+    this->floor_rows = floor_rows;
+    this->floor_columns = floor_columns;
 
-    std::vector<Tile> tiles {};
     tiles.reserve(floor_rows * floor_columns);
+    collision_map.reserve(floor_rows * floor_columns);
 
     for (int row = 0; row < floor_rows; ++row)
     {
         for (int column = 0; column < floor_columns; ++column)
         {
-            Tile::Type tile_type { Tile::Type::floor };
-
             if (row == 0 || row == floor_rows - 1 || column == 0 || column == floor_columns - 1)
             {
-                tile_type = Tile::Type::wall;
+                place_wall(row, column);
+                continue;
             }
 
-            auto transform_component = std::make_shared<Transform_component>();
-            transform_component->position = Position { column, row };
-
-            Sprite_specification sprite_specification {};
-            if (tile_type == Tile::Type::wall)
-            {
-                sprite_specification = brogue_tiles.get_sprite_specification(3, 2);
-            }
-            else if (tile_type == Tile::Type::floor)
-            {
-                sprite_specification = brogue_tiles.get_sprite_specification(0, 8);
-            }
-
-            auto sprite_component = std::make_shared<Sprite_component>(sprite_specification, transform_component);
-
-            Tile tile { tile_type, transform_component, sprite_component };
-
-            tiles.emplace_back(tile);
+            place_floor(row, column);
         }
     }
 
-    std::shared_ptr<Floor> floor = std::make_shared<Floor>(tiles, floor_rows, floor_columns);
-
+    std::shared_ptr<Floor> floor = std::make_shared<Floor>(tiles, collision_map, floor_rows, floor_columns);
     return floor;
+}
 
-    // std::vector<Tile> tiles(floor_rows * floor_columns, Tile {Tile::Type::floor});
+void Premade_floor_generator::place_wall(int row, int column)
+{
+    auto transform_component = std::make_shared<Transform_component>(Position { column, row });
+    Sprite_specification sprite_specification { brogue_tiles.get_sprite_specification(3, 2) }; // TODO: Get rid of magic numbers
+    auto sprite_component = std::make_shared<Sprite_component>(sprite_specification, transform_component);
+    Tile tile { Tile::Type::wall, transform_component, sprite_component };
 
-    // std::mdspan tiles_view {tiles.data(), floor_rows, floor_columns}; // TODO: Don't use magic numbers
+    tiles.emplace_back(tile);
+    collision_map.emplace_back(1);
+}
 
-    // std::size_t rows {tiles_view.extent(0)};
-    // std::size_t columns {tiles_view.extent(1)};
+void Premade_floor_generator::place_floor(int row, int column)
+{
+    auto transform_component = std::make_shared<Transform_component>(Position { column, row });
+    Sprite_specification sprite_specification { brogue_tiles.get_sprite_specification(0, 8) }; // TODO: Get rid of magic numbers
+    auto sprite_component = std::make_shared<Sprite_component>(sprite_specification, transform_component);
+    Tile tile { Tile::Type::floor, transform_component, sprite_component };
 
-    // for (std::size_t row = 0; row != rows; ++row)
-    // {
-    //     for (std::size_t column = 0; column != columns; ++column)
-    //     {
-    //         if (row == 0 || row == rows - 1)
-    //         {
-    //             tiles_view[row, column].type = Tile::Type::wall;
-    //         }
-    //         else if (column == 0 || column == columns - 1)
-    //         {
-    //             tiles_view[row, column].type = Tile::Type::wall;
-    //         }
-    //     }
-    // }
-
-    // std::unique_ptr<Floor> floor = std::make_unique<Floor>(tiles, floor_rows, floor_columns);
-
-    return floor;
+    tiles.emplace_back(tile);
+    collision_map.emplace_back(0);
 }

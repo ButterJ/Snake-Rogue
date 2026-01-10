@@ -1,16 +1,15 @@
 #include "floor.h"
 
+#include <mdspan>
+
 const std::vector<Tile>& Floor::get_tiles() const
 {
     return tiles;
 }
 
-const int Floor::get_rows() const
+bool Floor::is_occupied(const Position& position) const
 {
-    return rows;
-}
+    std::mdspan collision_map_view { collsion_map.data(), rows, columns };
 
-const int Floor::get_columns() const
-{
-    return columns;
+    return collision_map_view[position.y, position.x] == 1;
 }

@@ -4,7 +4,7 @@
 void Enemy::take_turn()
 {
     SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Monsters turn");
-    body_parts.front().get()->move(Direction { 1, 0 });
+    move(Direction { 1, 0 });
 }
 
 void Enemy::set_position(const Position& position)

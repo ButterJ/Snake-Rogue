@@ -21,6 +21,8 @@ class Dungeon_layer : public Core::Layer
     void on_render() override;
     void on_stop() override;
 
+    std::shared_ptr<Floor> get_current_floor();
+
   private:
     void render_map_tiles();
 
@@ -30,5 +32,5 @@ class Dungeon_layer : public Core::Layer
     Turn_based_system turn_based_system {};
 
     std::unique_ptr<Premade_floor_generator> premade_floor_generator { std::make_unique<Premade_floor_generator>() };
-    std::shared_ptr<Floor> generated_floor { premade_floor_generator->generate_floor() };
+    std::shared_ptr<Floor> current_floor;
 };
