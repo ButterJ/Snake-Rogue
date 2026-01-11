@@ -12,3 +12,8 @@ Position& Position::operator+=(const Direction& direction)
 
     return *this;
 }
+
+Direction Position::operator-(const Position& other_position) const
+{
+    return Direction { .x { x - other_position.x }, .y { y - other_position.y } };
+}

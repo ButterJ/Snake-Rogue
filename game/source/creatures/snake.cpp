@@ -31,32 +31,16 @@ Action_result Snake::move(const Direction& direction) // TODO: Shouldnt be able 
                                                       // TODO: Also clean up this whole pointer syntax mess
                                                       // TODO: Use the body_part.move(Direction) functionality
 {
-    Body_part* head { body_parts.front().get() };
+    auto head { body_parts.front() };
 
-    Position previous_part_position { head->get_transform_component().get()->position };
+    auto previous_body_part_position { head->get_transform_component().get()->position + direction };
 
-    Position move_position = previous_part_position + direction;
-
-    bool is_move_position_occupied { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->is_occupied(move_position) };
-
-    if (is_move_position_occupied)
+    for (auto body_part : body_parts)
     {
-        return Action_result::failure;
-    }
-
-    head->get_transform_component().get()->position = move_position;
-
-    if (body_parts.size() <= 1)
-    {
-        return Action_result::success;
-    }
-
-    // Move other parts after head
-    for (auto i { ++body_parts.begin() }; i != body_parts.end(); i++)
-    {
-        Position temporary_position { previous_part_position };
-        previous_part_position = i->get()->get_transform_component().get()->position;
-        i->get()->get_transform_component().get()->position = temporary_position;
+        auto body_part_position { body_part.get()->get_transform_component().get()->position };
+        auto body_part_move_direction { previous_body_part_position - body_part_position };
+        previous_body_part_position = body_part_position;
+        body_part.get()->move(body_part_move_direction);
     }
 
     return Action_result::success;

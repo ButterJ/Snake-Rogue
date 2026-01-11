@@ -9,4 +9,5 @@ struct Position
 
     Position operator+(const Direction& direction) const;
     Position& operator+=(const Direction& direction);
+    Direction operator-(const Position& other_position) const;
 };

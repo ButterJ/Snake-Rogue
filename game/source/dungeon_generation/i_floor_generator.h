@@ -1,6 +1,8 @@
 #pragma once
 
 #include "floor.h"
+#include "tile.h"
+
 #include <memory>
 
 class I_floor_generator
@@ -11,6 +13,5 @@ class I_floor_generator
     virtual const std::shared_ptr<Floor> generate_floor(int floor_rows, int floor_columns) = 0;
 
   protected:
-    std::vector<Environment_object> tiles {};
-    std::vector<int> collision_map {};
+    std::vector<std::shared_ptr<Tile>> tiles {};
 };
