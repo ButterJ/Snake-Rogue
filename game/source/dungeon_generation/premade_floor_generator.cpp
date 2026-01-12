@@ -41,7 +41,7 @@ void Premade_floor_generator::place_wall(int row, int column)
     std::shared_ptr<Environment_object> wall { std::make_shared<Environment_object>(Environment_object { Environment_object::Type::wall, transform_component, sprite_component }) };
 
     std::mdspan tile_view { tiles.data(), floor_rows, floor_columns };
-    tile_view[std::array { row, column }].get()->add_game_object(std::dynamic_pointer_cast<Game_object>(wall));
+    tile_view[std::array { row, column }].get()->add_game_object(Tile::Occupant_type::environment_object, std::dynamic_pointer_cast<Game_object>(wall));
 }
 
 void Premade_floor_generator::place_floor(int row, int column)
@@ -52,5 +52,5 @@ void Premade_floor_generator::place_floor(int row, int column)
     std::shared_ptr<Environment_object> floor { std::make_shared<Environment_object>(Environment_object { Environment_object::Type::floor, transform_component, sprite_component }) };
 
     std::mdspan tile_view { tiles.data(), floor_rows, floor_columns };
-    tile_view[std::array { row, column }].get()->add_game_object(std::dynamic_pointer_cast<Game_object>(floor));
+    tile_view[std::array { row, column }].get()->add_game_object(Tile::Occupant_type::environment_object, std::dynamic_pointer_cast<Game_object>(floor));
 }

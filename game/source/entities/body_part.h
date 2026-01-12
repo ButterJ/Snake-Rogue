@@ -19,6 +19,7 @@ class Body_part : public Game_object, public I_renderable
         components.push_back(transform_component);
     }
 
+    void set_position(const Position& position);
     void move(const Direction& direction);
 
     void render() override;

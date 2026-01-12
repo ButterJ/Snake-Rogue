@@ -9,22 +9,27 @@ std::shared_ptr<Transform_component> Body_part::get_transform_component()
     return transform_component;
 }
 
-void Body_part::move(const Direction& direction)
+void Body_part::set_position(const Position& position)
 {
-    auto move_position { transform_component.get()->position + direction };
-    auto is_move_position_occupied { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->is_occupied(move_position) };
+    bool is_position_occupied { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->is_occupied(position) };
 
-    if (is_move_position_occupied) // TODO: Do proper handling
+    if (is_position_occupied) // TODO: Do proper handling
     {
-        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Move direction occupied");
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Position is occupied");
         return;
     }
 
     // auto previous_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(transform_component.get()->position) };
-    // previous_tile.get()->remove_game_object(this);
-    transform_component.get()->position += direction;
+    // previous_tile.get()->remove_game_object(Tile::Occupant_type::body_part);
+    transform_component.get()->position = position;
     // auto new_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(transform_component.get()->position) };
-    // new_tile.get()->add_game_object(this);
+    // new_tile.get()->add_game_object(Tile::Occupant_type::body_part, std::shared_ptr<Game_object>(this));
+}
+
+void Body_part::move(const Direction& direction)
+{
+    auto move_position { transform_component.get()->position + direction };
+    set_position(move_position);
 }
 
 void Body_part::render()

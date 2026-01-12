@@ -12,8 +12,6 @@ class Game_object
   public:
     virtual ~Game_object() {}
 
-    bool has_collision(); // TODO: Replace with has component (collider) or something similar
-
     template <typename T_component>
         requires std::derived_from<T_component, Component>
     std::optional<std::shared_ptr<T_component>> get_component()
