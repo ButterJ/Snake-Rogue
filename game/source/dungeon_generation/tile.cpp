@@ -1,7 +1,6 @@
 #include "tile.h"
 #include "collider_component.h"
 #include "environment_object.h"
-#include "i_renderable.h"
 #include <assert.h>
 
 bool Tile::is_occupied() const
@@ -55,26 +54,26 @@ void Tile::remove_game_object(Occupant_type Tile_occupant_type)
     }
 }
 
-void Tile::render() const // TODO: Change to get component
+void Tile::render() const
 {
     if (held_body_part)
     {
-        auto renderable = std::dynamic_pointer_cast<I_renderable>(held_body_part);
+        auto sprite_component { held_body_part.get()->get_component<Sprite_component>() };
 
-        if (renderable)
+        if (sprite_component)
         {
-            renderable.get()->render();
+            sprite_component->get()->render();
             return;
         }
     }
 
     if (held_environment_object)
     {
-        auto renderable = std::dynamic_pointer_cast<I_renderable>(held_environment_object);
+        auto sprite_component { held_environment_object.get()->get_component<Sprite_component>() };
 
-        if (renderable)
+        if (sprite_component)
         {
-            renderable.get()->render();
+            sprite_component->get()->render();
             return;
         }
     }

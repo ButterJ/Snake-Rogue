@@ -2,11 +2,10 @@
 
 #include "collider_component.h"
 #include "game_object.h"
-#include "i_renderable.h"
 #include "sprite_component.h"
 #include "transform_component.h"
 
-class Environment_object : public Game_object, public I_renderable
+class Environment_object : public Game_object
 {
   public:
     enum class Type
@@ -27,8 +26,6 @@ class Environment_object : public Game_object, public I_renderable
             components.push_back(std::make_shared<Collider_component>());
         }
     }
-
-    void render() override;
 
   private:
     Type type {};

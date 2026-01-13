@@ -16,11 +16,3 @@ void Game_controlled_creature::add_body_part(std::shared_ptr<Body_part> body_par
 {
     body_parts.push_back(body_part);
 }
-
-void Game_controlled_creature::render()
-{
-    for (auto body_part : body_parts)
-    {
-        body_part.get()->render();
-    }
-}

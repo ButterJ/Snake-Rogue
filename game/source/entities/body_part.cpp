@@ -31,8 +31,3 @@ void Body_part::move(const Direction& direction)
     auto move_position { transform_component.get()->position + direction };
     set_position(move_position);
 }
-
-void Body_part::render()
-{
-    sprite_component.get()->render();
-}
