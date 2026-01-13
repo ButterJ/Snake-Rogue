@@ -4,17 +4,19 @@
 
 #include <SDL3/SDL_keyboard.h>
 
-void Snake::set_position(const Position& position) // TODO: Think about how to not stack all body parts on each other
+Action_result Snake::set_position(const Position& position) // TODO: Think about how to not stack all body parts on each other
 {
     if (body_parts.empty())
     {
-        return;
+        return Action_result::failure;
     }
 
     for (auto i { body_parts.begin() }; i != body_parts.end(); i++)
     {
         i->get()->set_position(position);
     }
+
+    return Action_result::success; // TODO: Need to return the correct action result
 }
 
 Action_result Snake::move(const Direction& direction) // TODO: Shouldnt be able to move without body parts (being dead)

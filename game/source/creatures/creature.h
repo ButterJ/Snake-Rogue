@@ -16,9 +16,9 @@ template <typename T_turn_based_entity>
 class Creature : public T_turn_based_entity, public I_renderable // TODO: Add max body parts restriction
 {
   public:
+    virtual Action_result set_position(const Position& position) = 0;
     virtual Action_result move(const Direction& direction) = 0;
     virtual void add_body_part(std::shared_ptr<Body_part> body_part) = 0;
-    virtual void set_position(const Position& position) = 0;
 
   protected:
     std::list<std::shared_ptr<Body_part>> body_parts {};

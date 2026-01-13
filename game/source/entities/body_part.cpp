@@ -19,11 +19,11 @@ void Body_part::set_position(const Position& position)
         return;
     }
 
-    // auto previous_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(transform_component.get()->position) };
-    // previous_tile.get()->remove_game_object(Tile::Occupant_type::body_part);
+    auto previous_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(transform_component.get()->position) };
+    previous_tile.get()->remove_game_object(Tile::Occupant_type::body_part);
     transform_component.get()->position = position;
-    // auto new_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(transform_component.get()->position) };
-    // new_tile.get()->add_game_object(Tile::Occupant_type::body_part, std::shared_ptr<Game_object>(this));
+    auto new_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(transform_component.get()->position) };
+    new_tile.get()->add_game_object(Tile::Occupant_type::body_part, shared_from_this());
 }
 
 void Body_part::move(const Direction& direction)

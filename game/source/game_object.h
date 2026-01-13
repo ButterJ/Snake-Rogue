@@ -7,7 +7,7 @@
 #include <optional>
 #include <vector>
 
-class Game_object
+class Game_object : public std::enable_shared_from_this<Game_object>
 {
   public:
     virtual ~Game_object() {}

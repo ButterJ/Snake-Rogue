@@ -55,7 +55,7 @@ void Tile::remove_game_object(Occupant_type Tile_occupant_type)
     }
 }
 
-void Tile::render() const
+void Tile::render() const // TODO: Change to get component
 {
     if (held_body_part)
     {
@@ -64,6 +64,7 @@ void Tile::render() const
         if (renderable)
         {
             renderable.get()->render();
+            return;
         }
     }
 
@@ -74,6 +75,7 @@ void Tile::render() const
         if (renderable)
         {
             renderable.get()->render();
+            return;
         }
     }
 }
