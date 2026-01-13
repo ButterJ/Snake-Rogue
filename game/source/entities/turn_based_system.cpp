@@ -5,12 +5,6 @@
 
 void Turn_based_system::update(float delta_time)
 {
-    if (is_waiting_for_input_cooldown())
-    {
-        current_input_delay += delta_time;
-        return;
-    }
-
     if (!is_player_turn)
     {
         Turn_based_system::Process_result process_result { process_entity_turns() };
@@ -19,6 +13,12 @@ void Turn_based_system::update(float delta_time)
         {
             is_player_turn = true;
         }
+    }
+
+    if (is_waiting_for_input_cooldown())
+    {
+        current_input_delay += delta_time;
+        return;
     }
 
     if (is_player_turn)
