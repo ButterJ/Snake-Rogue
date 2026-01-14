@@ -19,7 +19,6 @@ namespace Core
 
         Sdl_manager& get_sdl_manager();
 
-        // TODO: Understand push layer and see if I can reorganize it into header and source
         template <typename TLayer>
             requires(std::is_base_of_v<Layer, TLayer>)
         void push_layer()

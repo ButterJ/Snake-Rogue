@@ -1,12 +1,14 @@
 #include "sdl_manager.h"
 
+#include <SDL3/SDL_log.h>
 #include <SDL3_image/SDL_image.h>
 #include <string>
 
 namespace Core
 {
 
-    void Sdl_manager::initialize()
+    void Sdl_manager::initialize() // TODO: Rewrite error handling, orient on the SDL CreateWindowAndRenderer documentation
+                                   // TODO: Maybe make a function call_sdl_function which will take a function pointer and throw errors.
     {
         try
         {
@@ -19,7 +21,6 @@ namespace Core
         catch (std::string error_message)
         {
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", error_message.c_str(), nullptr);
-            // TODO: Add error handling logger class call.
         }
     }
 
