@@ -13,15 +13,18 @@ Action_result Snake::set_position(const Position& position) // TODO: Think about
 
     for (auto i { body_parts.begin() }; i != body_parts.end(); i++)
     {
-        i->get()->set_position(position);
+        Action_result action_result { i->get()->set_position(position) };
+
+        if (action_result == Action_result::failure)
+        {
+            return action_result;
+        }
     }
 
     return Action_result::success; // TODO: Need to return the correct action result
 }
 
-Action_result Snake::move(const Direction& direction) // TODO: Shouldnt be able to move without body parts (being dead)
-                                                      // TODO: Also clean up this whole pointer syntax mess
-                                                      // TODO: Use the body_part.move(Direction) functionality
+Action_result Snake::move(const Direction& direction)
 {
     auto head { body_parts.front() };
 
@@ -32,7 +35,12 @@ Action_result Snake::move(const Direction& direction) // TODO: Shouldnt be able 
         auto body_part_position { body_part.get()->get_transform_component().get()->position };
         auto body_part_move_direction { previous_body_part_position - body_part_position };
         previous_body_part_position = body_part_position;
-        body_part.get()->move(body_part_move_direction);
+        Action_result action_result { body_part.get()->move(body_part_move_direction) };
+
+        if (action_result == Action_result::failure)
+        {
+            return action_result;
+        }
     }
 
     return Action_result::success;

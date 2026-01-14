@@ -1,5 +1,6 @@
 #pragma once
 
+#include "action_result.h"
 #include "collider_component.h"
 #include "direction.h"
 #include "game_object.h"
@@ -26,8 +27,8 @@ class Body_part : public Game_object
                                                            { on_death(); });
     }
 
-    void set_position(const Position& position);
-    void move(const Direction& direction);
+    Action_result set_position(const Position& position);
+    Action_result move(const Direction& direction);
 
     std::shared_ptr<Transform_component> get_transform_component();
 
