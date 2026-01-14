@@ -1,6 +1,6 @@
-// Use SDL_MAIN_USE_CALLBACK to replace the main function with specific SDL functions
-#define SDL_MAIN_USE_CALLBACKS 1
+#define SDL_MAIN_USE_CALLBACKS 1 // Using SDL_MAIN_USE_CALLBACK to replace the main function with specific SDL functions
 
+#include "background_layer.h"
 #include "dungeon_layer.h"
 #include "game.h"
 #include "sdl_manager.h"
@@ -9,6 +9,7 @@
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv)
 {
+    Core::Game::get_instance().push_layer<Background_layer>();
     Core::Game::get_instance().push_layer<Dungeon_layer>();
     Core::Game::get_instance().start();
 

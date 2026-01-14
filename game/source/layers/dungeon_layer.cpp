@@ -34,12 +34,9 @@ void Dungeon_layer::on_update(float delta_time)
 
 void Dungeon_layer::on_render() // TODO: Remove test functionality
 {
-    const Core::Sdl_manager::State& sdl_manager_state { Core::Game::get_instance().get_sdl_manager().get_state() };
-
-    SDL_SetRenderDrawColor(sdl_manager_state.renderer, 200, 200, 200, 255);
-    SDL_RenderClear(sdl_manager_state.renderer);
-
     render_map_tiles();
+
+    const Core::Sdl_manager::State& sdl_manager_state { Core::Game::get_instance().get_sdl_manager().get_state() };
 
     SDL_RenderPresent(sdl_manager_state.renderer);
 }
