@@ -19,4 +19,8 @@ class Snake : public Player_controlled_creature
 
     Action_result set_position(const Position& position) override;
     Action_result move(const Direction& direction) override;
+
+  private:
+    Input_result on_direction_input(const Direction& direction);
+    Action_result attack(const Direction& direction);
 };

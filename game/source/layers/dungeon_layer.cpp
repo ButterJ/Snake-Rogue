@@ -14,7 +14,7 @@ void Dungeon_layer::on_start() // TODO: Replace test functionality
 
     // Adding player snake
     Creature_builder<Snake> snake_builder {};
-    snake_builder.create_creature(1);
+    snake_builder.create_creature(3);
     snake = snake_builder.get_creature();
     snake.get()->set_position(Position { 20, 7 });
     turn_based_system.register_entity(snake);

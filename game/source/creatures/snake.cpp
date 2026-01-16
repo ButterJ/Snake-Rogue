@@ -50,29 +50,55 @@ const Snake::Input_result Snake::process_input()
 {
     const bool* key_states = SDL_GetKeyboardState(0); // TODO: Disallow diagonal movement
 
+    Direction direction_input {};
     if (key_states[SDL_SCANCODE_W])
     {
-        Action_result move_outcome { move(Direction { 0, -1 }) };
-        return move_outcome == Action_result::success ? turn_finished : invalid_action;
+        direction_input += Direction { 0, -1 };
     }
 
     if (key_states[SDL_SCANCODE_A])
     {
-        Action_result move_outcome { move(Direction { -1, 0 }) };
-        return move_outcome == Action_result::success ? turn_finished : invalid_action;
+        direction_input += Direction { -1, 0 };
     }
 
     if (key_states[SDL_SCANCODE_S])
     {
-        Action_result move_outcome { move(Direction { 0, 1 }) };
-        return move_outcome == Action_result::success ? turn_finished : invalid_action;
+        direction_input += Direction { 0, 1 };
     }
 
     if (key_states[SDL_SCANCODE_D])
     {
-        Action_result move_outcome { move(Direction { 1, 0 }) };
-        return move_outcome == Action_result::success ? turn_finished : invalid_action;
+        direction_input += Direction { 1, 0 };
+    }
+
+    if (direction_input != Direction { 0, 0 })
+    {
+        return on_direction_input(direction_input);
     }
 
     return none;
+}
+
+Snake::Input_result Snake::on_direction_input(const Direction& direction)
+{
+    Action_result move_result { move(direction) };
+
+    if (move_result == Action_result::success)
+    {
+        return turn_finished;
+    }
+
+    Action_result attack_result { attack(direction) };
+
+    if (attack_result == Action_result::success)
+    {
+        return turn_finished;
+    }
+
+    return invalid_action; // TODO: See if none is needed to be returned
+}
+
+Action_result Snake::attack(const Direction& direction)
+{
+    return Action_result::failure;
 }
