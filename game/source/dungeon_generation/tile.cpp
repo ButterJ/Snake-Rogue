@@ -1,6 +1,10 @@
 #include "tile.h"
+
 #include "collider_component.h"
 #include "environment_object.h"
+
+#include <SDL3/SDL_log.h>
+
 #include <assert.h>
 
 bool Tile::is_occupied() const
@@ -34,7 +38,15 @@ void Tile::add_game_object(Occupant_type tile_occupant_type, std::shared_ptr<Gam
             break;
         case body_part:
             // assert(!held_body_part && "Tile already has a body part");
-            held_body_part = game_object;
+            auto cast_body_part { dynamic_pointer_cast<Body_part>(game_object) };
+
+            if (!cast_body_part)
+            {
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot cast the given game object to a body part!");
+                return;
+            }
+
+            held_body_part = cast_body_part;
             break;
     }
 }
@@ -77,4 +89,9 @@ void Tile::render() const
             return;
         }
     }
+}
+
+std::shared_ptr<Body_part> Tile::get_held_body_part()
+{
+    return held_body_part;
 }

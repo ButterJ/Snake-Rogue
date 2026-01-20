@@ -1,5 +1,6 @@
 #pragma once
 
+#include "body_part.h"
 #include "game_object.h"
 
 #include <memory>
@@ -21,7 +22,9 @@ class Tile // TODO: Rewrite, as it is pretty hardcoded right now
     void remove_game_object(Occupant_type Tile_occupant_type);
     void render() const;
 
+    std::shared_ptr<Body_part> get_held_body_part();
+
   private:
     std::shared_ptr<Game_object> held_environment_object {};
-    std::shared_ptr<Game_object> held_body_part {};
+    std::shared_ptr<Body_part> held_body_part {};
 };

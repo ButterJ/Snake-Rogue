@@ -100,5 +100,17 @@ Snake::Input_result Snake::on_direction_input(const Direction& direction)
 
 Action_result Snake::attack(const Direction& direction)
 {
+    auto head { body_parts.front() };
+    auto current_floor { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor() };
+    auto tile_to_attack { current_floor->get_tile_at_position(head->get_position() + direction) };
+
+    auto body_part_to_attack { tile_to_attack->get_held_body_part() };
+
+    if (body_part_to_attack)
+    {
+        body_part_to_attack->change_health(-100); // TODO: Replace magic number
+        return Action_result::success;
+    }
+
     return Action_result::failure;
 }
