@@ -19,7 +19,7 @@ Action_result Body_part::set_position(const Position& position)
     }
 
     auto previous_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(get_position()) };
-    previous_tile.get()->remove_game_object(Tile::Occupant_type::body_part);
+    previous_tile.get()->remove_game_object(Tile::Occupant_type::body_part); // TODO: I don't like that the body part knows of the tile like this
     m_transform_component.get()->position = position;
     auto new_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(get_position()) };
     new_tile.get()->add_game_object(Tile::Occupant_type::body_part, shared_from_this());
@@ -47,6 +47,6 @@ void Body_part::on_death()
 {
     SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Health component died");
     On_death_callback();
-    // auto current_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(get_position()) };
-    // current_tile->remove_game_object(Tile::Occupant_type::body_part);
+    auto current_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(get_position()) };
+    current_tile->remove_game_object(Tile::Occupant_type::body_part);
 }

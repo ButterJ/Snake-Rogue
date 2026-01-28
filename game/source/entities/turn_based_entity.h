@@ -1,5 +1,7 @@
 #pragma once
 
+#include "eventpp/callbacklist.h"
+
 class Turn_based_entity
 {
   public:
@@ -10,6 +12,8 @@ class Turn_based_entity
     };
 
     Tick_result tick();
+
+    eventpp::CallbackList<void()> On_death_callback {};
 
   protected:
     virtual void take_turn() = 0;

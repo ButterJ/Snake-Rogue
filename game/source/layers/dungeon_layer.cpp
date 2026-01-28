@@ -32,7 +32,7 @@ void Dungeon_layer::on_update(float delta_time)
     turn_based_system.update(delta_time);
 }
 
-void Dungeon_layer::on_render() // TODO: Remove test functionality
+void Dungeon_layer::on_render()
 {
     render_map_tiles();
 

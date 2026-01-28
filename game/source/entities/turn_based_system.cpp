@@ -112,6 +112,12 @@ void Turn_based_system::register_entity(std::weak_ptr<Turn_based_entity> turn_ba
         return;
     }
 
+    auto on_death_lambda { [this, turn_based_entity]()
+                           {
+                               release_entity(turn_based_entity);
+                           } };
+    turn_based_entity.lock()->On_death_callback.append(on_death_lambda);
+
     std::weak_ptr<Player_controlled_entity> player_controlled_entity { std::dynamic_pointer_cast<Player_controlled_entity>(turn_based_entity.lock()) };
 
     if (player_controlled_entity.lock())
