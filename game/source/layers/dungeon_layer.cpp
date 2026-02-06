@@ -13,9 +13,11 @@ void Dungeon_layer::on_start() // TODO: Replace test functionality
     current_floor = premade_floor_generator->generate_floor(14, 50);
 
     Spritesheet spritesheet { "data/tiles.png", 128.0f, 232.0f };
+    Spritesheet kenney_spritesheet { "data/kenney_tiny_town_tiles.png", 16, 16 };
+    Spritesheet at_sign { "data/at_sign_01.png", 16.0f, 16.0f };
 
     // Adding player snake
-    Sprite_specification snake_sprite_specification { spritesheet.get_sprite_specification(0, 4) };
+    Sprite_specification snake_sprite_specification { spritesheet.get_sprite_specification(0, 4) }; // Default 0, 4
     Creature_builder<Snake> snake_builder { snake_sprite_specification };
     snake_builder.create_creature(3);
     snake = snake_builder.get_creature();

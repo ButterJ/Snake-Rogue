@@ -1,6 +1,9 @@
 #include "premade_floor_generator.h"
+
+#include "dirt.h"
 #include "environment_object.h"
 #include "game_object.h"
+#include "wall.h"
 
 #include <experimental/mdspan>
 #include <memory>
@@ -35,10 +38,8 @@ const std::shared_ptr<Floor> Premade_floor_generator::generate_floor(int floor_r
 
 void Premade_floor_generator::place_wall(int row, int column)
 {
-    auto transform_component = std::make_shared<Transform_component>(Position { column, row });
-    Sprite_specification sprite_specification { brogue_tiles.get_sprite_specification(3, 2) }; // TODO: Get rid of magic numbers
-    auto sprite_component = std::make_shared<Sprite_component>(sprite_specification, transform_component);
-    std::shared_ptr<Environment_object> wall { std::make_shared<Environment_object>(Environment_object { Environment_object::Type::wall, transform_component, sprite_component }) };
+    Position position { column, row };
+    std::shared_ptr<Wall> wall { std::make_shared<Wall>(position) };
 
     std::mdspan tile_view { tiles.data(), floor_rows, floor_columns };
     tile_view[std::array { row, column }].get()->add_game_object(Tile::Occupant_type::environment_object, std::dynamic_pointer_cast<Game_object>(wall));
@@ -46,11 +47,9 @@ void Premade_floor_generator::place_wall(int row, int column)
 
 void Premade_floor_generator::place_floor(int row, int column)
 {
-    auto transform_component = std::make_shared<Transform_component>(Position { column, row });
-    Sprite_specification sprite_specification { brogue_tiles.get_sprite_specification(0, 8) }; // TODO: Get rid of magic numbers
-    auto sprite_component = std::make_shared<Sprite_component>(sprite_specification, transform_component);
-    std::shared_ptr<Environment_object> floor { std::make_shared<Environment_object>(Environment_object { Environment_object::Type::floor, transform_component, sprite_component }) };
+    Position position { column, row };
+    std::shared_ptr<Dirt> dirt { std::make_shared<Dirt>(position) };
 
     std::mdspan tile_view { tiles.data(), floor_rows, floor_columns };
-    tile_view[std::array { row, column }].get()->add_game_object(Tile::Occupant_type::environment_object, std::dynamic_pointer_cast<Game_object>(floor));
+    tile_view[std::array { row, column }].get()->add_game_object(Tile::Occupant_type::environment_object, std::dynamic_pointer_cast<Game_object>(dirt));
 }
