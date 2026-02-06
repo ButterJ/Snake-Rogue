@@ -6,9 +6,10 @@
 #include <memory>
 
 template <typename T_creature>
-class Creature_builder // TODO: Rename to
+class Creature_builder
 {
   public:
+    Creature_builder(const Sprite_specification& sprite_specification) : m_sprite_specification { sprite_specification } {}
     void create_creature(int number_of_body_parts);
 
     std::shared_ptr<T_creature> get_creature() const;
@@ -16,7 +17,7 @@ class Creature_builder // TODO: Rename to
   private:
     std::shared_ptr<Body_part> create_body_part();
 
-    Spritesheet brogue_tiles { "data/tiles.png", 128.0f, 232.0f }; // TODO: Temporary
+    Sprite_specification m_sprite_specification {};
     std::shared_ptr<T_creature> creature { std::make_shared<T_creature>() };
 };
 
@@ -35,8 +36,7 @@ std::shared_ptr<Body_part> Creature_builder<T_creature>::create_body_part()
 {
     auto transform_component = std::make_shared<Transform_component>();
 
-    Sprite_specification sprite_specification { brogue_tiles.get_sprite_specification(0, 4) };
-    auto sprite_component = std::make_shared<Sprite_component>(sprite_specification, transform_component);
+    auto sprite_component = std::make_shared<Sprite_component>(m_sprite_specification, transform_component);
     auto body_part = std::make_shared<Body_part>(sprite_component, transform_component);
 
     return body_part;

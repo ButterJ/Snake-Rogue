@@ -114,3 +114,13 @@ Action_result Snake::attack(const Direction& direction)
 
     return Action_result::failure;
 }
+
+void Snake::add_body_part(std::shared_ptr<Body_part> body_part)
+{
+    body_parts.push_back(body_part);
+}
+
+void Snake::take_turn()
+{
+    // Player turns are driven by input in Turn_based_system::update
+}
