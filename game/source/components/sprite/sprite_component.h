@@ -13,13 +13,16 @@
 class Sprite_component : public Component
 {
   public:
-    Sprite_component(Sprite_specification p_sprite_specification, std::shared_ptr<Transform_component> p_transform_component);
+    Sprite_component(Sprite_specification sprite_specification, std::shared_ptr<Transform_component> transform_component)
+        : m_sprite_specification { sprite_specification }, m_transform_component { transform_component }
+    {
+    }
 
     void render();
 
   private:
-    Sprite_specification sprite_specification;
-    std::shared_ptr<Transform_component> transform_component;
+    Sprite_specification m_sprite_specification;
+    std::shared_ptr<Transform_component> m_transform_component;
 
     Core::Sdl_manager& sdl_manager { Core::Game::get_instance().get_sdl_manager() };
 };

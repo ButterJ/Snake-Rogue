@@ -17,7 +17,7 @@ namespace Core
             int window_width { 1600 };
             int window_height { 900 };
             int logical_width { 640 };
-            int logical_height { 325 };
+            int logical_height { 320 };
         };
 
         struct State

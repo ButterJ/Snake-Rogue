@@ -69,11 +69,12 @@ namespace Core
         }
 
         SDL_Texture* loaded_texture { load_texture(file_path) };
+        SDL_SetTextureScaleMode(loaded_texture, SDL_SCALEMODE_PIXELART); // TODO: Might want different scale modes for different textures
 
         return *loaded_texture;
     }
 
-    SDL_Texture* Sdl_manager::load_texture(std::filesystem::path file_path)
+    SDL_Texture* Sdl_manager::load_texture(std::filesystem::path file_path) // TODO: Should destroy textures again
     {
         SDL_Texture* loaded_texture { IMG_LoadTexture(state.renderer, file_path.string().c_str()) };
         loaded_textures[file_path] = loaded_texture;

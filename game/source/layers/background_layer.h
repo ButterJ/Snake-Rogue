@@ -9,5 +9,5 @@ class Background_layer : public Core::Layer
     void on_render() override;
 
   private:
-    const Colour background_colour { 200, 200, 200, 255 };
+    const Colour background_colour { 20, 10, 30, 255 };
 };

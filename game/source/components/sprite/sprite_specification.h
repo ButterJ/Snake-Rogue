@@ -8,4 +8,5 @@ struct Sprite_specification
 {
     std::filesystem::path texture_file_path {};
     SDL_FRect texture_source_rectangle {};
+    SDL_FRect pixel_size { 16.0f, 16.0f };
 };
