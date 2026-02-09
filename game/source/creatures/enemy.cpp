@@ -12,6 +12,10 @@ Action_result Enemy::set_position(const Position& position) // TODO: Return corr
     return Action_result::success;
 }
 
+Action_result Enemy::attack_adjacent_target(const std::vector<Body_part>& targets)
+{
+}
+
 void Enemy::add_body_part(std::shared_ptr<Body_part> body_part)
 {
     body_parts.push_back(body_part);
@@ -26,5 +30,7 @@ void Enemy::on_death()
 
 void Enemy::take_turn()
 {
-    move(Direction { 1, 0 });
+    std::vector<Body_part> adjacent_targets {};
+    std::vector<Direction> occupied_directions {};
+    move(Direction::Right);
 }

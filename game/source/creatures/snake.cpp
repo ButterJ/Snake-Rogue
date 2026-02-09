@@ -53,25 +53,25 @@ const Snake::Input_result Snake::process_input()
     Direction direction_input {};
     if (key_states[SDL_SCANCODE_W])
     {
-        direction_input += Direction { 0, -1 };
+        direction_input += Direction::Up;
     }
 
     if (key_states[SDL_SCANCODE_A])
     {
-        direction_input += Direction { -1, 0 };
+        direction_input += Direction::Left;
     }
 
     if (key_states[SDL_SCANCODE_S])
     {
-        direction_input += Direction { 0, 1 };
+        direction_input += Direction::Down;
     }
 
     if (key_states[SDL_SCANCODE_D])
     {
-        direction_input += Direction { 1, 0 };
+        direction_input += Direction::Right;
     }
 
-    if (direction_input != Direction { 0, 0 })
+    if (direction_input != Direction::Zero)
     {
         return on_direction_input(direction_input);
     }
