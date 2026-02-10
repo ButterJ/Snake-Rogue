@@ -7,7 +7,7 @@ const std::vector<std::shared_ptr<Tile>>& Floor::get_tiles() const
     return tiles;
 }
 
-std::shared_ptr<Tile> Floor::get_tile_at_position(const Position& position) const
+std::shared_ptr<Tile> Floor::get_tile_at_position(const Position& position) const // TODO: Handle case where a tile with an invalid position gets requested
 {
     std::mdspan tile_view { tiles.data(), rows, columns };
 

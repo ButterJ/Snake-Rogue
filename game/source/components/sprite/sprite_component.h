@@ -1,5 +1,6 @@
 #pragma once
 
+#include "colour.h"
 #include "component.h"
 #include "game.h"
 #include "position.h"
@@ -20,9 +21,12 @@ class Sprite_component : public Component
 
     void render();
 
+    void set_colour(Colour colour);
+
   private:
     Sprite_specification m_sprite_specification;
     std::shared_ptr<Transform_component> m_transform_component;
+    Colour m_colour {};
 
     Core::Sdl_manager& sdl_manager { Core::Game::get_instance().get_sdl_manager() };
 };

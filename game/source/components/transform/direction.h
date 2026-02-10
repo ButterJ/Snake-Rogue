@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 struct Direction
 {
     int x { 0 };
@@ -11,12 +13,12 @@ struct Direction
     static const Direction Left;
     static const Direction Zero;
 
-    // static constexpr Direction Up() { return { 0, 1 }; }
-    // static constexpr Direction Down() { return { 0, -1 }; }
-    // static constexpr Direction Left() { return { -1, 0 }; }
-    // static constexpr Direction Right() { return { 1, 0 }; }
-    // static constexpr Direction Zero() { return { 0, 0 }; }
+    static const std::vector<Direction> Orthogonal_directions;
 
     Direction& operator+=(const Direction& direction);
-    bool operator!=(const Direction& direction);
+    bool operator!=(const Direction& direction) const;
+    bool operator==(const Direction& direction) const;
+    Direction operator*(int multiplicator) const;
+
+    Direction get_opposite_direction();
 };

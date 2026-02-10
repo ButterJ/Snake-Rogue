@@ -1,5 +1,6 @@
 #include "body_part.h"
 
+#include "colour.h"
 #include "dungeon_layer.h"
 
 #include <SDL3/SDL_log.h>
@@ -41,6 +42,9 @@ const Position& Body_part::get_position() const
 void Body_part::change_health(int health_change)
 {
     m_health_component->change_health(health_change);
+
+    double health_percentage { static_cast<double>(m_health_component->get_health()) / m_health_component->get_max_health() };
+    m_sprite_component->set_colour({ 255, static_cast<uint8_t>(health_percentage * 255), static_cast<uint8_t>(health_percentage * 255), 255 });
 }
 
 void Body_part::on_death()

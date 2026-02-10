@@ -57,6 +57,16 @@ void Health_component::change_health(int health_change)
     }
 }
 
+int Health_component::get_health() const
+{
+    return m_health;
+}
+
+int Health_component::get_max_health() const
+{
+    return m_max_health;
+}
+
 void Health_component::on_death()
 {
     On_death_callback();

@@ -108,7 +108,7 @@ Action_result Snake::attack(const Direction& direction)
 
     if (body_part_to_attack)
     {
-        body_part_to_attack->change_health(-100); // TODO: Replace magic number
+        body_part_to_attack->change_health(-20); // TODO: Replace magic number
         return Action_result::success;
     }
 
