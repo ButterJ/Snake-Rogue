@@ -23,6 +23,7 @@ class Snake : public Creature<Player_controlled_entity>
   private:
     Input_result on_direction_input(const Direction& direction);
     Action_result attack(const Direction& direction);
+    void on_body_part_death(std::shared_ptr<Body_part> dead_body_part);
 
   public:
     void add_body_part(std::shared_ptr<Body_part> body_part) override;

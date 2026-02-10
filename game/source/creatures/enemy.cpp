@@ -23,12 +23,7 @@ void Enemy::add_body_part(std::shared_ptr<Body_part> body_part)
 {
     body_parts.push_back(body_part);
     body_part->On_death_callback.append([this]() // TODO: This is temporary where it is assumed that one body part dying means that the whole creature dies
-                                        { on_death(); });
-}
-
-void Enemy::on_death()
-{
-    On_death_callback();
+                                        { die(); });
 }
 
 void Enemy::take_turn()

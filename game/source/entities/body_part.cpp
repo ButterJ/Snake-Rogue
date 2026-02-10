@@ -47,9 +47,13 @@ void Body_part::change_health(int health_change)
     m_sprite_component->set_colour({ 255, static_cast<uint8_t>(health_percentage * 255), static_cast<uint8_t>(health_percentage * 255), 255 });
 }
 
+void Body_part::die()
+{
+    on_death();
+}
+
 void Body_part::on_death()
 {
-    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Health component died");
     On_death_callback();
     auto current_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(get_position()) };
     current_tile->remove_game_object(Tile::Occupant_type::body_part);

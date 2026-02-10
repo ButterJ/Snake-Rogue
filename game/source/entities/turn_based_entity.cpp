@@ -14,3 +14,8 @@ Turn_based_entity::Tick_result Turn_based_entity::tick()
 
     return none;
 }
+
+void Turn_based_entity::die()
+{
+    On_death_callback();
+}

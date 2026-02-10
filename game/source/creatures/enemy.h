@@ -21,9 +21,6 @@ class Enemy : public Creature<Turn_based_entity> // TODO: Right now this is a cl
 
     void add_body_part(std::shared_ptr<Body_part> body_part) override;
 
-  protected:
-    void on_death();
-
   public:
     void take_turn() override;
 

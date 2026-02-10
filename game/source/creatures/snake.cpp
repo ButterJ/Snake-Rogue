@@ -118,6 +118,35 @@ Action_result Snake::attack(const Direction& direction)
 void Snake::add_body_part(std::shared_ptr<Body_part> body_part)
 {
     body_parts.push_back(body_part);
+    body_part->On_death_callback.append([this, body_part]()
+                                        { on_body_part_death(body_part); });
+}
+
+void Snake::on_body_part_death(std::shared_ptr<Body_part> dead_body_part)
+{
+    bool dead_body_part_found { false };
+
+    for (auto it { body_parts.begin() }; it != body_parts.end();)
+    {
+        if (dead_body_part_found)
+        {
+            SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Removing body part after dead body part");
+            // TODO: Instead of this triggering an inefficient chain reaction, continue removing in this for loop.
+            // TODO: To do this, the death callback needs to be removed from the body part.
+            (*it)->die();
+            return;
+        }
+
+        if (*it == dead_body_part)
+        {
+            SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Dead body part found");
+            dead_body_part_found = true;
+            it = body_parts.erase(it);
+            continue;
+        }
+
+        it++;
+    }
 }
 
 void Snake::take_turn()

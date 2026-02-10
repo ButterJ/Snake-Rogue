@@ -34,6 +34,7 @@ class Body_part : public Game_object
     Action_result move(const Direction& direction);
     const Position& get_position() const;
     void change_health(int health_change);
+    void die();
 
     std::shared_ptr<Transform_component> get_transform_component();
 
