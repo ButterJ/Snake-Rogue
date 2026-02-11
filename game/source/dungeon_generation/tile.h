@@ -1,10 +1,11 @@
 #pragma once
 
 #include "body_part.h"
+#include "food.h"
 #include "game_object.h"
 
 #include <memory>
-#include <unordered_map>
+#include <set>
 #include <vector>
 
 class Tile // TODO: Rewrite, as it is pretty hardcoded right now
@@ -22,9 +23,15 @@ class Tile // TODO: Rewrite, as it is pretty hardcoded right now
     void remove_game_object(Occupant_type Tile_occupant_type);
     void render() const;
 
+    // TODO: The food things are for testing if set works with my custom data type. Should be rewritten later
+    void add_food(std::shared_ptr<Food> food);
+    void remove_food(std::shared_ptr<Food> food);
+    std::set<std::shared_ptr<Food>> get_held_foods() const;
+
     std::shared_ptr<Body_part> get_held_body_part();
 
   private:
     std::shared_ptr<Game_object> held_environment_object {};
     std::shared_ptr<Body_part> held_body_part {};
+    std::set<std::shared_ptr<Food>> held_foods {};
 };

@@ -1,6 +1,7 @@
 #include "dungeon_layer.h"
 
 #include "creature_builder.h"
+#include "food.h"
 #include "player_controlled_entity.h"
 #include "position.h"
 #include "sprite_specification.h"
@@ -30,6 +31,11 @@ void Dungeon_layer::on_start() // TODO: Replace test functionality
     enemy = enemy_builder.get_creature();
     enemy.get()->set_position(Position { 2, 1 });
     turn_based_system.register_entity(enemy);
+
+    // Adding test food
+    Position food_position { 10, 6 };
+    std::shared_ptr<Food> test_food { std::make_shared<Food>(food_position, enemy_sprite_specification, 10) };
+    get_current_floor()->get_tile_at_position(food_position)->add_food(test_food);
 }
 
 void Dungeon_layer::on_update(float delta_time)

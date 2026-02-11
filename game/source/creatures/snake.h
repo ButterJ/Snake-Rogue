@@ -3,6 +3,7 @@
 #include "body_part.h"
 #include "creature.h"
 #include "direction.h"
+#include "food.h"
 #include "i_player_entity.h"
 #include "player_controlled_entity.h"
 #include "sprite_component.h"
@@ -11,6 +12,7 @@
 
 #include <list>
 #include <memory>
+#include <set>
 
 class Snake : public Creature<Player_controlled_entity>
 {
@@ -24,6 +26,7 @@ class Snake : public Creature<Player_controlled_entity>
     Input_result on_direction_input(const Direction& direction);
     Action_result attack(const Direction& direction);
     void on_body_part_death(std::shared_ptr<Body_part> dead_body_part);
+    void eat_foods(std::set<std::shared_ptr<Food>> foods);
 
   public:
     void add_body_part(std::shared_ptr<Body_part> body_part) override;

@@ -7,10 +7,25 @@
 #include <optional>
 #include <vector>
 
+// TODO: I commented out the id functionality as I don't think it is needed right now. Remove this once Im sure it is not needed
 class Game_object : public std::enable_shared_from_this<Game_object>
 {
   public:
+    // Game_object()
+    // {
+    //     m_id = s_next_id++;
+    // }
     virtual ~Game_object() {}
+
+    // bool operator==(const Game_object& other) const
+    // {
+    //     return m_id == other.m_id;
+    // }
+
+    // bool operator<(const Game_object& other) const
+    // {
+    //     return m_id < other.m_id;
+    // }
 
     template <typename T_component>
         requires std::derived_from<T_component, Component>
@@ -31,4 +46,8 @@ class Game_object : public std::enable_shared_from_this<Game_object>
 
   protected:
     std::vector<std::shared_ptr<Component>> components {};
+
+    //   private:
+    //     static inline int s_next_id { 0 };
+    //     int m_id;
 };

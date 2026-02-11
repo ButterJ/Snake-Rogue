@@ -3,6 +3,7 @@
 #include "floor.h"
 
 #include <SDL3/SDL_keyboard.h>
+#include <string>
 
 Action_result Snake::set_position(const Position& position) // TODO: Think about how to not stack all body parts on each other
 {
@@ -41,9 +42,27 @@ Action_result Snake::move(const Direction& direction)
         {
             return action_result;
         }
+
+        if (body_part == head)
+        {
+            auto head_position { body_part_position + body_part_move_direction };
+            auto head_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(head_position) };
+            auto foods_to_eat { head_tile->get_held_foods() };
+            eat_foods(foods_to_eat);
+        }
     }
 
     return Action_result::success;
+}
+
+void Snake::eat_foods(std::set<std::shared_ptr<Food>> foods)
+{
+    for (auto food : foods)
+    {
+        auto food_satiation_string { std::to_string(food->get_satiation_value()) };
+        std::string debug_string { "Ate food with value of " + food_satiation_string };
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, debug_string.c_str());
+    }
 }
 
 const Snake::Input_result Snake::process_input()

@@ -66,11 +66,41 @@ void Tile::remove_game_object(Occupant_type Tile_occupant_type)
     }
 }
 
+void Tile::add_food(std::shared_ptr<Food> food)
+{
+    held_foods.insert(food);
+}
+
+void Tile::remove_food(std::shared_ptr<Food> food)
+{
+    auto food_iterator = held_foods.find(food);
+
+    if (food_iterator == held_foods.end())
+    {
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Could not remove food as it is not held by this tile");
+        return;
+    }
+
+    held_foods.erase(food_iterator);
+}
+
 void Tile::render() const
 {
     if (held_body_part)
     {
         auto sprite_component { held_body_part.get()->get_component<Sprite_component>() };
+
+        if (sprite_component)
+        {
+            sprite_component->get()->render();
+            return;
+        }
+    }
+
+    if (held_foods.size() != 0)
+    {
+        auto topmost_food { held_foods.rbegin() };
+        auto sprite_component { topmost_food->get()->get_component<Sprite_component>() };
 
         if (sprite_component)
         {
@@ -94,4 +124,9 @@ void Tile::render() const
 std::shared_ptr<Body_part> Tile::get_held_body_part()
 {
     return held_body_part;
+}
+
+std::set<std::shared_ptr<Food>> Tile::get_held_foods() const
+{
+    return held_foods;
 }
