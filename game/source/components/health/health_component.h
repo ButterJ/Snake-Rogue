@@ -13,8 +13,8 @@ class Health_component : public Component
     }
 
     void set_max_health(int max_health);
-    void change_max_health(int max_health);
-    void change_health(int health_change);
+    void change_max_health(int change);
+    void change_health(int change);
     void set_health(int health);
     int get_health() const;
     int get_max_health() const;
