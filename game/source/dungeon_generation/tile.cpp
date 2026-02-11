@@ -84,6 +84,11 @@ void Tile::remove_food(std::shared_ptr<Food> food)
     held_foods.erase(food_iterator);
 }
 
+void Tile::remove_all_foods()
+{
+    held_foods.clear();
+}
+
 void Tile::render() const
 {
     if (held_body_part)

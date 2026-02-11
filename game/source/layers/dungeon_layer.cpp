@@ -1,6 +1,5 @@
 #include "dungeon_layer.h"
 
-#include "creature_builder.h"
 #include "food.h"
 #include "player_controlled_entity.h"
 #include "position.h"
@@ -18,17 +17,19 @@ void Dungeon_layer::on_start() // TODO: Replace test functionality
 
     // Adding player snake
     Sprite_specification snake_sprite_specification { snake_spritesheet.get_sprite_specification(0, 0) };
-    Creature_builder<Snake> snake_builder { snake_sprite_specification };
-    snake_builder.create_creature(3);
-    snake = snake_builder.get_creature();
+    snake = std::make_shared<Snake>(3, snake_sprite_specification);
+    // Creature_builder<Snake> snake_builder { snake_sprite_specification };
+    // snake_builder.create_creature(3);
+    // snake = snake_builder.get_creature();
     snake.get()->set_position(Position { 20, 7 });
     turn_based_system.register_entity(snake);
 
     // Adding test enemy
     Sprite_specification enemy_sprite_specification { enemy_spritesheet.get_sprite_specification(0, 0) };
-    Creature_builder<Enemy> enemy_builder { enemy_sprite_specification };
-    enemy_builder.create_creature(1);
-    enemy = enemy_builder.get_creature();
+    enemy = std::make_shared<Enemy>(1, enemy_sprite_specification);
+    // Creature_builder<Enemy> enemy_builder { enemy_sprite_specification };
+    // enemy_builder.create_creature(1);
+    // enemy = enemy_builder.get_creature();
     enemy.get()->set_position(Position { 2, 1 });
     turn_based_system.register_entity(enemy);
 

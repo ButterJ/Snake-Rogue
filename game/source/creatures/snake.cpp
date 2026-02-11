@@ -5,6 +5,12 @@
 #include <SDL3/SDL_keyboard.h>
 #include <string>
 
+Snake::Snake(int number_of_body_parts, const Sprite_specification& sprite_specification) : Creature<Player_controlled_entity>(number_of_body_parts, sprite_specification)
+{
+    satiation_bar.On_bar_filled_callback.append([this]()
+                                                { on_satiation_bar_filled(); });
+}
+
 Action_result Snake::set_position(const Position& position) // TODO: Think about how to not stack all body parts on each other
 {
     if (body_parts.empty())
@@ -49,6 +55,7 @@ Action_result Snake::move(const Direction& direction)
             auto head_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(head_position) };
             auto foods_to_eat { head_tile->get_held_foods() };
             eat_foods(foods_to_eat);
+            head_tile->remove_all_foods(); // TODO: I would like this to be in the eat_foods function
         }
     }
 
@@ -59,10 +66,21 @@ void Snake::eat_foods(std::set<std::shared_ptr<Food>> foods)
 {
     for (auto food : foods)
     {
-        auto food_satiation_string { std::to_string(food->get_satiation_value()) };
-        std::string debug_string { "Ate food with value of " + food_satiation_string };
-        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, debug_string.c_str());
+        satiation_bar.change_value(food->get_satiation_value());
     }
+}
+
+void Snake::on_satiation_bar_filled()
+{
+    if (body_parts.size() >= m_max_body_parts)
+    {
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Leveling up not implemented yet");
+        return;
+    }
+
+    // TODO: Add body part
+
+    satiation_bar.set_value(0);
 }
 
 const Snake::Input_result Snake::process_input()
@@ -132,13 +150,6 @@ Action_result Snake::attack(const Direction& direction)
     }
 
     return Action_result::failure;
-}
-
-void Snake::add_body_part(std::shared_ptr<Body_part> body_part)
-{
-    body_parts.push_back(body_part);
-    body_part->On_death_callback.append([this, body_part]()
-                                        { on_body_part_death(body_part); });
 }
 
 void Snake::on_body_part_death(std::shared_ptr<Body_part> dead_body_part)

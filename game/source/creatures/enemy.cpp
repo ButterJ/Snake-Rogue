@@ -19,11 +19,16 @@ Action_result Enemy::set_position(const Position& position) // TODO: Return corr
     return Action_result::success;
 }
 
-void Enemy::add_body_part(std::shared_ptr<Body_part> body_part)
+// void Enemy::add_body_part(std::shared_ptr<Body_part> body_part)
+// {
+//     body_parts.push_back(body_part);
+//     body_part->On_death_callback.append([this]() // TODO: This is temporary where it is assumed that one body part dying means that the whole creature dies
+//                                         { die(); });
+// }
+
+void Enemy::on_body_part_death(std::shared_ptr<Body_part> body_part)
 {
-    body_parts.push_back(body_part);
-    body_part->On_death_callback.append([this]() // TODO: This is temporary where it is assumed that one body part dying means that the whole creature dies
-                                        { die(); });
+    die();
 }
 
 void Enemy::take_turn()

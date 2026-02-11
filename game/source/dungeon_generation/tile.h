@@ -27,6 +27,7 @@ class Tile // TODO: Rewrite, as it is pretty hardcoded right now
     void add_food(std::shared_ptr<Food> food);
     void remove_food(std::shared_ptr<Food> food);
     std::set<std::shared_ptr<Food>> get_held_foods() const;
+    void remove_all_foods();
 
     std::shared_ptr<Body_part> get_held_body_part();
 
