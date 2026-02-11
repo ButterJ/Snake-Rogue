@@ -78,7 +78,8 @@ void Snake::on_satiation_bar_filled()
         return;
     }
 
-    // TODO: Add body part
+    auto body_part { create_body_part() };
+    add_body_part(body_part);
 
     satiation_bar.set_value(0);
 }

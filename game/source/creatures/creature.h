@@ -21,10 +21,8 @@ class Creature : public T_turn_based_entity // TODO: Add max body parts restrict
     virtual Action_result set_position(const Position& position) = 0;
     virtual Action_result move(const Direction& direction) = 0;
 
-  private:
-    std::shared_ptr<Body_part> create_body_part();
-
   protected:
+    std::shared_ptr<Body_part> create_body_part();
     void add_body_part(std::shared_ptr<Body_part> body_part);
     virtual void on_body_part_death(std::shared_ptr<Body_part> dead_body_part);
 
