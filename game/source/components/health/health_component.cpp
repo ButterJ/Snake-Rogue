@@ -5,39 +5,23 @@ void Health_component::set_max_health(int max_health)
     assert(max_health > 0 && "Max health must be greater than zero");
 
     m_max_health = max_health;
-
-    if (m_health > m_max_health)
-    {
-        m_health = m_max_health;
-    }
+    m_health = std::min(m_health, m_max_health);
 }
 
 void Health_component::change_max_health(int max_health)
 {
     m_max_health += max_health;
-
-    if (m_max_health < 1)
-    {
-        m_max_health = 1;
-    }
-
-    if (m_health > m_max_health)
-    {
-        m_health = m_max_health;
-    }
+    m_max_health = std::max(m_max_health, 1);
+    m_health = std::min(m_health, m_max_health);
 }
 
 void Health_component::set_health(int health)
 {
     m_health = health;
+    m_health = std::clamp(m_health, 0, m_max_health);
 
-    if (m_health > m_max_health)
+    if (m_health == 0)
     {
-        m_health = m_max_health;
-    }
-    else if (m_health <= 0)
-    {
-        m_health = 0;
         on_death();
     }
 }
@@ -45,14 +29,10 @@ void Health_component::set_health(int health)
 void Health_component::change_health(int health_change)
 {
     m_health += health_change;
+    m_health = std::clamp(m_health, 0, m_max_health);
 
-    if (m_health > m_max_health)
+    if (m_health == 0)
     {
-        m_health = m_max_health;
-    }
-    else if (m_health <= 0)
-    {
-        m_health = 0;
         on_death();
     }
 }
