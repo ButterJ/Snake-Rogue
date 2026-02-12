@@ -13,3 +13,4 @@ AllowAllArgumentsOnNextLine: false
 SpaceBeforeCpp11BracedList: true
 Cpp11BracedListStyle: false
 IndentCaseLabels: true
+BreakConstructorInitializers: BeforeComma
