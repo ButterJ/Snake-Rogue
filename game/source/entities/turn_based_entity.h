@@ -17,6 +17,7 @@ class Turn_based_entity
 
   protected:
     virtual void take_turn() = 0;
+
     virtual void die();
 
     int m_turn_energy_cost { 100 };

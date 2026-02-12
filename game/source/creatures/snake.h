@@ -28,12 +28,14 @@ class Snake : public Creature<Player_controlled_entity>
 
   private:
     Input_result on_direction_input(const Direction& direction);
+
     Action_result attack(const Direction& direction);
-    void on_body_part_death(std::shared_ptr<Body_part> dead_body_part) override;
+
     void eat_foods(std::set<std::shared_ptr<Food>> foods);
     void on_satiation_bar_filled();
 
-  protected:
+    void on_body_part_death(std::shared_ptr<Body_part> dead_body_part) override;
+
     void die() override;
 
     Resource_bar m_satiation_bar { 100 };

@@ -5,6 +5,21 @@
 
 #include <SDL3/SDL_log.h>
 
+Body_part::Body_part(std::shared_ptr<Sprite_component> sprite_component, std::shared_ptr<Transform_component> transform_component)
+    : m_sprite_component { sprite_component }
+    , m_transform_component { transform_component }
+    , m_collider_component { std::make_shared<Collider_component>() }
+    , m_health_component { std::make_shared<Health_component>(100) }
+{
+    components.push_back(m_sprite_component);
+    components.push_back(m_transform_component);
+    components.push_back(m_collider_component);
+    components.push_back(m_health_component);
+
+    m_health_component.get()->On_death_callback.append([this]()
+                                                       { on_death(); });
+}
+
 std::shared_ptr<Transform_component> Body_part::get_transform_component()
 {
     return m_transform_component;
@@ -12,7 +27,7 @@ std::shared_ptr<Transform_component> Body_part::get_transform_component()
 
 Action_result Body_part::set_position(const Position& position)
 {
-    bool is_position_occupied { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->is_occupied(position) };
+    bool is_position_occupied { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->is_tile_occupied(position) };
 
     if (is_position_occupied)
     {

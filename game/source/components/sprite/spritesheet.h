@@ -10,15 +10,13 @@
 class Spritesheet // TODO: Add description to this class, it is not fully clear
 {
   public:
-    Spritesheet(std::filesystem::path spritesheet_path, float sprite_width, float sprite_height)
-        : m_spritesheet_path { spritesheet_path }, m_sprite_width { sprite_width }, m_sprite_height { sprite_height }
-    {
-    }
+    Spritesheet(std::filesystem::path spritesheet_path, float sprite_width, float sprite_height);
 
     Sprite_specification get_sprite_specification(int index_horizontal, int index_vertical) const;
 
   private:
     const std::filesystem::path m_spritesheet_path;
+
     const float m_sprite_width;
     const float m_sprite_height;
 };

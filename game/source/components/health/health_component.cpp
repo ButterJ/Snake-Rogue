@@ -1,5 +1,11 @@
 #include "health_component.h"
 
+Health_component::Health_component(int max_health)
+    : m_max_health { max_health }
+{
+    m_health = max_health;
+}
+
 void Health_component::set_max_health(int max_health)
 {
     assert(max_health > 0 && "Max health must be greater than zero");
@@ -34,14 +40,14 @@ void Health_component::change_health(int change)
     }
 }
 
-int Health_component::get_health() const
-{
-    return m_health;
-}
-
 int Health_component::get_max_health() const
 {
     return m_max_health;
+}
+
+int Health_component::get_health() const
+{
+    return m_health;
 }
 
 void Health_component::on_death()

@@ -17,8 +17,6 @@ namespace Core
         void update();
         void stop();
 
-        Sdl_manager& get_sdl_manager();
-
         template <typename TLayer>
             requires(std::is_base_of_v<Layer, TLayer>)
         void push_layer()
@@ -38,10 +36,14 @@ namespace Core
             return nullptr;
         }
 
+        Sdl_manager& get_sdl_manager();
+
       private:
-        uint64_t m_previous_time {};
-        std::vector<std::unique_ptr<Layer>> m_layer_stack {};
         Sdl_manager m_sdl_manager {};
+
+        std::vector<std::unique_ptr<Layer>> m_layer_stack {};
+
+        uint64_t m_previous_time {};
     };
 
 } // namespace Core

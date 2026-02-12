@@ -10,6 +10,7 @@ class Turn_based_system
 {
   public:
     void update(float delta_time); // TODO: Consider chosing a better name for update
+
     void register_entity(std::weak_ptr<Turn_based_entity> turn_based_entity);
     void release_entity(std::weak_ptr<Turn_based_entity> turn_based_entity);
 
@@ -21,8 +22,10 @@ class Turn_based_system
     };
 
     const Process_result process_entity_turns();
+
     Process_result tick_player_controlled_entities();
     void tick_other_entities();
+
     const bool is_waiting_for_input_cooldown() const;
 
     std::list<std::weak_ptr<Player_controlled_entity>> player_controlled_entities {};

@@ -7,7 +7,6 @@
 #include <optional>
 #include <vector>
 
-// TODO: I commented out the id functionality as I don't think it is needed right now. Remove this once Im sure it is not needed
 class Game_object : public std::enable_shared_from_this<Game_object>
 {
   public:

@@ -18,25 +18,32 @@ class Creature : public T_turn_based_entity // TODO: Add max body parts restrict
 {
   public:
     Creature(int number_of_body_parts, const Sprite_specification& sprite_specification);
+
     virtual Action_result set_position(const Position& position) = 0;
     virtual Action_result move(const Direction& direction) = 0;
+
     Position get_head_position() const;
 
   protected:
     std::shared_ptr<Body_part> create_body_part();
     void add_body_part(std::shared_ptr<Body_part> body_part);
+
     virtual void on_body_part_death(std::shared_ptr<Body_part> dead_body_part);
+
     void take_turn() override;
 
-    std::list<std::shared_ptr<Body_part>> body_parts {};
+    std::list<std::shared_ptr<Body_part>> m_body_parts {};
     int m_max_body_parts { 3 };
+
     Sprite_specification m_sprite_specification;
     Position m_last_position {};
 };
 
 template <typename T_turn_based_entity>
     requires(std::derived_from<T_turn_based_entity, Turn_based_entity>)
-Creature<T_turn_based_entity>::Creature(int number_of_body_parts, const Sprite_specification& sprite_specification) : m_max_body_parts { number_of_body_parts }, m_sprite_specification { sprite_specification }
+Creature<T_turn_based_entity>::Creature(int number_of_body_parts, const Sprite_specification& sprite_specification)
+    : m_max_body_parts { number_of_body_parts }
+    , m_sprite_specification { sprite_specification }
 {
     for (int i = 0; i < number_of_body_parts; i++)
     {
@@ -61,7 +68,7 @@ template <typename T_turn_based_entity>
     requires(std::derived_from<T_turn_based_entity, Turn_based_entity>)
 void Creature<T_turn_based_entity>::add_body_part(std::shared_ptr<Body_part> body_part)
 {
-    body_parts.push_back(body_part);
+    m_body_parts.push_back(body_part);
     body_part->On_death_callback.append([this, body_part]()
                                         { on_body_part_death(body_part); });
 }
@@ -76,11 +83,11 @@ template <typename T_turn_based_entity>
     requires(std::derived_from<T_turn_based_entity, Turn_based_entity>)
 Position Creature<T_turn_based_entity>::get_head_position() const
 {
-    bool has_head { body_parts.size() != 0 };
+    bool has_head { m_body_parts.size() != 0 };
 
     if (has_head)
     {
-        return body_parts.begin()->get()->get_position();
+        return m_body_parts.begin()->get()->get_position();
     }
 
     return m_last_position;

@@ -17,11 +17,12 @@ class Tile // TODO: Rewrite, as it is pretty hardcoded right now
         body_part
     };
 
-  public:
-    bool is_occupied() const;
     void add_game_object(Occupant_type tile_occupant_type, std::shared_ptr<Game_object> game_object);
     void remove_game_object(Occupant_type Tile_occupant_type);
+
     void render() const;
+
+    bool is_occupied() const;
 
     // TODO: The food things are for testing if set works with my custom data type. Should be rewritten later
     void add_food(std::shared_ptr<Food> food);

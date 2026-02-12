@@ -15,13 +15,14 @@
 class Enemy : public Creature<Turn_based_entity> // TODO: Right now this is a class to test out enemies in the game. Should probably be named Monster or Creature and be a base clas
 {
   public:
-    Enemy(int number_of_body_parts, const Sprite_specification& sprite_specification) : Creature<Turn_based_entity>(number_of_body_parts, sprite_specification) {}
+    Enemy(int number_of_body_parts, const Sprite_specification& sprite_specification);
+
     Action_result move(const Direction& direction) override;
     Action_result set_position(const Position& position) override;
-    Action_result attack_adjacent_target(const std::vector<std::shared_ptr<Body_part>>& targets);
 
-  public:
     void take_turn() override;
+
+    Action_result attack_adjacent_target(const std::vector<std::shared_ptr<Body_part>>& targets);
 
   protected:
     void on_body_part_death(std::shared_ptr<Body_part> dead_body_part) override;

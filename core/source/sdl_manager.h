@@ -37,10 +37,12 @@ namespace Core
       private:
         void create_window_and_renderer();
         void set_window_dimensions(int windowWidth, int windowHeight);
+
         SDL_Texture* load_texture(std::filesystem::path file_path);
 
-        State m_state {};
         std::map<std::filesystem::path, SDL_Texture*> m_loaded_textures {};
+
+        State m_state {};
     };
 
 } // namespace Core

@@ -1,5 +1,11 @@
 #include "sprite_component.h"
 
+Sprite_component::Sprite_component(Sprite_specification sprite_specification, std::shared_ptr<Transform_component> transform_component)
+    : m_sprite_specification { sprite_specification }
+    , m_transform_component { transform_component }
+{
+}
+
 void Sprite_component::render()
 {
     const Position& position { m_transform_component.get()->position };

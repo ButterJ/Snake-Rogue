@@ -7,17 +7,16 @@
 class Health_component : public Component
 {
   public:
-    Health_component(int max_health) : m_max_health { max_health } // TODO: Should be in .cpp file
-    {
-        m_health = max_health;
-    }
+    Health_component(int max_health);
 
     void set_max_health(int max_health);
     void change_max_health(int change);
+
     void change_health(int change);
     void set_health(int health);
-    int get_health() const;
+
     int get_max_health() const;
+    int get_health() const;
 
     eventpp::CallbackList<void()> On_death_callback {};
 

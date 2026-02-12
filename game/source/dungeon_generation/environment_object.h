@@ -12,10 +12,7 @@ class Environment_object : public Game_object
     //~Environment_object() = 0; // TODO: See if this is needed
 
   protected:
-    Environment_object(const Position& position) : m_transform_component { std::make_shared<Transform_component>(position) }
-    {
-        components.push_back(m_transform_component);
-    }
+    Environment_object(const Position& position);
 
     std::shared_ptr<Transform_component> m_transform_component;
     std::shared_ptr<Sprite_component> m_sprite_component;

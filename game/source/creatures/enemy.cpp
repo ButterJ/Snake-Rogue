@@ -8,16 +8,21 @@
 
 #include <algorithm>
 
+Enemy::Enemy(int number_of_body_parts, const Sprite_specification& sprite_specification)
+    : Creature<Turn_based_entity>(number_of_body_parts, sprite_specification)
+{
+}
+
 Action_result Enemy::move(const Direction& direction) // TODO: Return correct action result
 {
-    body_parts.front().get()->move(direction);
+    m_body_parts.front().get()->move(direction);
     m_last_position = get_head_position();
     return Action_result::success;
 }
 
 Action_result Enemy::set_position(const Position& position) // TODO: Return correct action result
 {
-    body_parts.front().get()->set_position(position);
+    m_body_parts.front().get()->set_position(position);
     m_last_position = get_head_position();
     return Action_result::success;
 }
@@ -46,7 +51,7 @@ void Enemy::take_turn()
     std::vector<std::shared_ptr<Body_part>> adjacent_targets {};
     std::vector<Direction> occupied_directions {};
 
-    Position current_position { body_parts.front()->get_position() };
+    Position current_position { m_body_parts.front()->get_position() };
 
     for (auto direction : Direction::Orthogonal_directions)
     {
@@ -90,7 +95,7 @@ Action_result Enemy::attack_adjacent_target(const std::vector<std::shared_ptr<Bo
 Action_result Enemy::move_towards_weighted_random_direction(const std::vector<Direction>& occupied_directions)
 {
     auto current_floor { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor() };
-    Position current_position { body_parts.front()->get_position() };
+    Position current_position { m_body_parts.front()->get_position() };
 
     std::vector<double> weights {};
     auto opposite_direction_from_last_move { m_last_move_direction.get_opposite_direction() };
