@@ -23,14 +23,14 @@ namespace Core
             requires(std::is_base_of_v<Layer, TLayer>)
         void push_layer()
         {
-            layer_stack.push_back(std::make_unique<TLayer>());
+            m_layer_stack.push_back(std::make_unique<TLayer>());
         }
 
         template <typename TLayer>
             requires(std::is_base_of_v<Layer, TLayer>)
         TLayer* get_layer()
         {
-            for (const auto& layer : layer_stack)
+            for (const auto& layer : m_layer_stack)
             {
                 if (auto casted = dynamic_cast<TLayer*>(layer.get()))
                     return casted;
@@ -39,9 +39,9 @@ namespace Core
         }
 
       private:
-        uint64_t previous_time {};
-        std::vector<std::unique_ptr<Layer>> layer_stack {};
-        Sdl_manager sdl_manager {};
+        uint64_t m_previous_time {};
+        std::vector<std::unique_ptr<Layer>> m_layer_stack {};
+        Sdl_manager m_sdl_manager {};
     };
 
 } // namespace Core

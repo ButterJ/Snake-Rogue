@@ -10,16 +10,16 @@
 
 const std::shared_ptr<Floor> Premade_floor_generator::generate_floor(int floor_rows, int floor_columns) // TODO: This function cannot be resused right now
 {
-    this->floor_rows = floor_rows;
-    this->floor_columns = floor_columns;
+    m_floor_rows = floor_rows;
+    m_floor_columns = floor_columns;
 
-    tiles.reserve(floor_rows * floor_columns);
+    m_tiles.reserve(floor_rows * floor_columns);
 
     for (int row = 0; row < floor_rows; ++row)
     {
         for (int column = 0; column < floor_columns; ++column)
         {
-            tiles.emplace_back(std::make_shared<Tile>());
+            m_tiles.emplace_back(std::make_shared<Tile>());
 
             if (row == 0 || row == floor_rows - 1 || column == 0 || column == floor_columns - 1)
             {
@@ -31,7 +31,7 @@ const std::shared_ptr<Floor> Premade_floor_generator::generate_floor(int floor_r
         }
     }
 
-    std::shared_ptr<Floor> floor = std::make_shared<Floor>(tiles, floor_rows, floor_columns);
+    std::shared_ptr<Floor> floor = std::make_shared<Floor>(m_tiles, floor_rows, floor_columns);
 
     return floor;
 }
@@ -41,7 +41,7 @@ void Premade_floor_generator::place_wall(int row, int column)
     Position position { column, row };
     std::shared_ptr<Wall> wall { std::make_shared<Wall>(position) };
 
-    std::mdspan tile_view { tiles.data(), floor_rows, floor_columns };
+    std::mdspan tile_view { m_tiles.data(), m_floor_rows, m_floor_columns };
     tile_view[std::array { row, column }].get()->add_game_object(Tile::Occupant_type::environment_object, std::dynamic_pointer_cast<Game_object>(wall));
 }
 
@@ -50,6 +50,6 @@ void Premade_floor_generator::place_floor(int row, int column)
     Position position { column, row };
     std::shared_ptr<Dirt> dirt { std::make_shared<Dirt>(position) };
 
-    std::mdspan tile_view { tiles.data(), floor_rows, floor_columns };
+    std::mdspan tile_view { m_tiles.data(), m_floor_rows, m_floor_columns };
     tile_view[std::array { row, column }].get()->add_game_object(Tile::Occupant_type::environment_object, std::dynamic_pointer_cast<Game_object>(dirt));
 }

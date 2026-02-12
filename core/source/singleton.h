@@ -9,8 +9,8 @@ namespace Core
       public:
         static T& get_instance()
         {
-            static T instance;
-            return instance;
+            static T s_instance;
+            return s_instance;
         }
 
         Singleton(const Singleton&) = delete;

@@ -26,11 +26,11 @@ class Dungeon_layer : public Core::Layer
   private:
     void render_map_tiles();
 
-    std::shared_ptr<Snake> snake {};
-    std::shared_ptr<Enemy> enemy {};
+    std::shared_ptr<Snake> m_snake {};
+    std::shared_ptr<Enemy> m_enemy {};
 
-    Turn_based_system turn_based_system {};
+    Turn_based_system m_turn_based_system {};
 
-    std::unique_ptr<Premade_floor_generator> premade_floor_generator { std::make_unique<Premade_floor_generator>() };
-    std::shared_ptr<Floor> current_floor;
+    std::unique_ptr<Premade_floor_generator> m_premade_floor_generator { std::make_unique<Premade_floor_generator>() };
+    std::shared_ptr<Floor> m_current_floor;
 };

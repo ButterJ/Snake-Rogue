@@ -20,7 +20,6 @@ class Sprite_component : public Component
     }
 
     void render();
-
     void set_colour(Colour colour);
 
   private:
@@ -28,5 +27,5 @@ class Sprite_component : public Component
     std::shared_ptr<Transform_component> m_transform_component;
     Colour m_colour {};
 
-    Core::Sdl_manager& sdl_manager { Core::Game::get_instance().get_sdl_manager() };
+    Core::Sdl_manager& m_sdl_manager { Core::Game::get_instance().get_sdl_manager() };
 };

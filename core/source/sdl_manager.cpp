@@ -17,7 +17,7 @@ namespace Core
             SDL_SetAppMetadata("Snake Rogue", "0.1.0", "Snake Rogue");
             SDL_InitSubSystem(SDL_INIT_VIDEO);
             create_window_and_renderer();
-            SDL_SetRenderLogicalPresentation(state.renderer, state.window_specification.logical_width, state.window_specification.logical_height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+            SDL_SetRenderLogicalPresentation(m_state.renderer, m_state.window_specification.logical_width, m_state.window_specification.logical_height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
         }
         catch (std::string error_message)
         {
@@ -27,7 +27,7 @@ namespace Core
 
     void Sdl_manager::create_window_and_renderer()
     {
-        if (!SDL_CreateWindowAndRenderer(state.window_specification.window_name, state.window_specification.window_width, state.window_specification.window_height, SDL_WINDOW_RESIZABLE, &state.window, &state.renderer))
+        if (!SDL_CreateWindowAndRenderer(m_state.window_specification.window_name, m_state.window_specification.window_width, m_state.window_specification.window_height, SDL_WINDOW_RESIZABLE, &m_state.window, &m_state.renderer))
         {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
             cleanup();
@@ -53,20 +53,20 @@ namespace Core
 
     void Sdl_manager::set_window_dimensions(int windowWidth, int windowHeight)
     {
-        state.window_specification.window_width = windowWidth;
-        state.window_specification.window_height = windowHeight;
+        m_state.window_specification.window_width = windowWidth;
+        m_state.window_specification.window_height = windowHeight;
     }
 
     const Sdl_manager::State& Sdl_manager::get_state() const
     {
-        return state;
+        return m_state;
     }
 
     SDL_Texture& Sdl_manager::get_texture(std::filesystem::path file_path)
     {
-        if (loaded_textures.contains(file_path))
+        if (m_loaded_textures.contains(file_path))
         {
-            return *loaded_textures[file_path];
+            return *m_loaded_textures[file_path];
         }
 
         SDL_Texture* loaded_texture { load_texture(file_path) };
@@ -77,16 +77,16 @@ namespace Core
 
     SDL_Texture* Sdl_manager::load_texture(std::filesystem::path file_path) // TODO: Should destroy textures again
     {
-        SDL_Texture* loaded_texture { IMG_LoadTexture(state.renderer, file_path.string().c_str()) };
-        loaded_textures[file_path] = loaded_texture;
+        SDL_Texture* loaded_texture { IMG_LoadTexture(m_state.renderer, file_path.string().c_str()) };
+        m_loaded_textures[file_path] = loaded_texture;
 
         return loaded_texture;
     }
 
     void Sdl_manager::cleanup()
     {
-        SDL_DestroyRenderer(state.renderer);
-        SDL_DestroyWindow(state.window);
+        SDL_DestroyRenderer(m_state.renderer);
+        SDL_DestroyWindow(m_state.window);
         SDL_QuitSubSystem(SDL_INIT_VIDEO);
         SDL_Quit();
     }

@@ -39,9 +39,8 @@ namespace Core
         void set_window_dimensions(int windowWidth, int windowHeight);
         SDL_Texture* load_texture(std::filesystem::path file_path);
 
-        State state {};
-
-        std::map<std::filesystem::path, SDL_Texture*> loaded_textures {};
+        State m_state {};
+        std::map<std::filesystem::path, SDL_Texture*> m_loaded_textures {};
     };
 
 } // namespace Core

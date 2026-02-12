@@ -24,8 +24,6 @@ class Body_part : public Game_object
         components.push_back(m_transform_component);
         components.push_back(m_collider_component);
         components.push_back(m_health_component);
-        auto test { [this]()
-                    { on_death(); } };
         m_health_component.get()->On_death_callback.append([this]()
                                                            { on_death(); });
     }

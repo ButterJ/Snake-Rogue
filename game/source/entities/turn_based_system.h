@@ -29,7 +29,7 @@ class Turn_based_system
     std::list<std::weak_ptr<Turn_based_entity>> other_entities {};
     std::weak_ptr<Player_controlled_entity> current_player_controlled_entity {};
 
-    bool is_player_turn { false };
-    const float delay_after_input { 0.1f };
-    float current_input_delay { 0.0f };
+    bool m_is_player_turn { false };
+    const float m_delay_after_input { 0.1f };
+    float m_current_input_delay { 0.0f };
 };

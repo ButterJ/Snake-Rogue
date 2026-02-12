@@ -32,7 +32,7 @@ class Tile // TODO: Rewrite, as it is pretty hardcoded right now
     std::shared_ptr<Body_part> get_held_body_part();
 
   private:
-    std::shared_ptr<Game_object> held_environment_object {};
-    std::shared_ptr<Body_part> held_body_part {};
-    std::set<std::shared_ptr<Food>> held_foods {};
+    std::shared_ptr<Game_object> m_held_environment_object {};
+    std::shared_ptr<Body_part> m_held_body_part {};
+    std::set<std::shared_ptr<Food>> m_held_foods {};
 };

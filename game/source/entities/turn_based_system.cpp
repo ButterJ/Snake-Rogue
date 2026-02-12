@@ -5,23 +5,23 @@
 
 void Turn_based_system::update(float delta_time)
 {
-    if (!is_player_turn)
+    if (!m_is_player_turn)
     {
         Turn_based_system::Process_result process_result { process_entity_turns() };
 
         if (process_result == Turn_based_system::Process_result::require_player_input)
         {
-            is_player_turn = true;
+            m_is_player_turn = true;
         }
     }
 
     if (is_waiting_for_input_cooldown())
     {
-        current_input_delay += delta_time;
+        m_current_input_delay += delta_time;
         return;
     }
 
-    if (is_player_turn)
+    if (m_is_player_turn)
     {
         assert(!current_player_controlled_entity.expired() && "Trying to process input for an expired turn based entity");
 
@@ -29,15 +29,15 @@ void Turn_based_system::update(float delta_time)
 
         if (input_result == Player_controlled_entity::Input_result::turn_finished) // TODO: Consider turning body into a function
         {
-            is_player_turn = false;
-            current_input_delay = 0.0f;
+            m_is_player_turn = false;
+            m_current_input_delay = 0.0f;
         }
     }
 }
 
 const bool Turn_based_system::is_waiting_for_input_cooldown() const
 {
-    return current_input_delay < delay_after_input;
+    return m_current_input_delay < m_delay_after_input;
 }
 
 const Turn_based_system::Process_result Turn_based_system::process_entity_turns()

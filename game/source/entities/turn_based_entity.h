@@ -19,7 +19,7 @@ class Turn_based_entity
     virtual void take_turn() = 0;
     virtual void die();
 
-    int turn_energy_cost { 100 };
-    int energy_regeneration { 20 }; // Energy restored per tick
-    int current_energy { 0 };
+    int m_turn_energy_cost { 100 };
+    int m_energy_regeneration { 20 };
+    int m_current_energy { 0 };
 };

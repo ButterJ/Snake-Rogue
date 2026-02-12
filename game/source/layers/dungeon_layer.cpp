@@ -10,22 +10,22 @@
 
 void Dungeon_layer::on_start() // TODO: Replace test functionality
 {
-    current_floor = premade_floor_generator->generate_floor(20, 40);
+    m_current_floor = m_premade_floor_generator->generate_floor(20, 40);
 
     Spritesheet snake_spritesheet { "data/body_part_snake.png", 16.0f, 16.0f };
     Spritesheet enemy_spritesheet { "data/body_part_enemy.png", 16.0f, 16.0f };
 
     // Adding player snake
     Sprite_specification snake_sprite_specification { snake_spritesheet.get_sprite_specification(0, 0) };
-    snake = std::make_shared<Snake>(3, snake_sprite_specification);
-    snake.get()->set_position(Position { 20, 7 });
-    turn_based_system.register_entity(snake);
+    m_snake = std::make_shared<Snake>(3, snake_sprite_specification);
+    m_snake.get()->set_position(Position { 20, 7 });
+    m_turn_based_system.register_entity(m_snake);
 
     // Adding test enemy
     Sprite_specification enemy_sprite_specification { enemy_spritesheet.get_sprite_specification(0, 0) };
-    enemy = std::make_shared<Enemy>(1, enemy_sprite_specification);
-    enemy.get()->set_position(Position { 2, 1 });
-    turn_based_system.register_entity(enemy);
+    m_enemy = std::make_shared<Enemy>(1, enemy_sprite_specification);
+    m_enemy.get()->set_position(Position { 2, 1 });
+    m_turn_based_system.register_entity(m_enemy);
 
     // Adding test food
     Position food_position { 10, 6 };
@@ -39,7 +39,7 @@ void Dungeon_layer::on_start() // TODO: Replace test functionality
 
 void Dungeon_layer::on_update(float delta_time)
 {
-    turn_based_system.update(delta_time);
+    m_turn_based_system.update(delta_time);
 }
 
 void Dungeon_layer::on_render()
@@ -53,7 +53,7 @@ void Dungeon_layer::on_render()
 
 void Dungeon_layer::render_map_tiles()
 {
-    const std::vector<std::shared_ptr<Tile>>& tiles { current_floor->get_tiles() };
+    const std::vector<std::shared_ptr<Tile>>& tiles { m_current_floor->get_tiles() };
 
     for (auto tile : tiles)
     {
@@ -67,5 +67,5 @@ void Dungeon_layer::on_stop()
 
 std::shared_ptr<Floor> Dungeon_layer::get_current_floor()
 {
-    return current_floor;
+    return m_current_floor;
 }

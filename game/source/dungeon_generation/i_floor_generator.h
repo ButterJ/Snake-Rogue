@@ -13,5 +13,5 @@ class I_floor_generator
     virtual const std::shared_ptr<Floor> generate_floor(int floor_rows, int floor_columns) = 0;
 
   protected:
-    std::vector<std::shared_ptr<Tile>> tiles {};
+    std::vector<std::shared_ptr<Tile>> m_tiles {};
 };

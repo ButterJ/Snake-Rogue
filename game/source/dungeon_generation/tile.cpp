@@ -9,17 +9,17 @@
 
 bool Tile::is_occupied() const
 {
-    if (held_body_part)
+    if (m_held_body_part)
     {
-        if (held_body_part.get()->get_component<Collider_component>())
+        if (m_held_body_part.get()->get_component<Collider_component>())
         {
             return true;
         }
     }
 
-    if (held_environment_object)
+    if (m_held_environment_object)
     {
-        if (held_environment_object.get()->get_component<Collider_component>())
+        if (m_held_environment_object.get()->get_component<Collider_component>())
         {
             return true;
         }
@@ -34,7 +34,7 @@ void Tile::add_game_object(Occupant_type tile_occupant_type, std::shared_ptr<Gam
     {
         case environment_object:
             // assert(!held_environment_object && "Tile already has an environment object");
-            held_environment_object = game_object;
+            m_held_environment_object = game_object;
             break;
         case body_part:
             // assert(!held_body_part && "Tile already has a body part");
@@ -46,7 +46,7 @@ void Tile::add_game_object(Occupant_type tile_occupant_type, std::shared_ptr<Gam
                 return;
             }
 
-            held_body_part = cast_body_part;
+            m_held_body_part = cast_body_part;
             break;
     }
 }
@@ -57,43 +57,43 @@ void Tile::remove_game_object(Occupant_type Tile_occupant_type)
     {
         case environment_object:
             // assert(held_environment_object && "Tile has no environment object to remove");
-            held_environment_object = nullptr;
+            m_held_environment_object = nullptr;
             break;
         case body_part:
             // assert(held_body_part && "Tile has no body part to remove");
-            held_body_part = nullptr;
+            m_held_body_part = nullptr;
             break;
     }
 }
 
 void Tile::add_food(std::shared_ptr<Food> food)
 {
-    held_foods.insert(food);
+    m_held_foods.insert(food);
 }
 
 void Tile::remove_food(std::shared_ptr<Food> food)
 {
-    auto food_iterator = held_foods.find(food);
+    auto food_iterator = m_held_foods.find(food);
 
-    if (food_iterator == held_foods.end())
+    if (food_iterator == m_held_foods.end())
     {
         SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Could not remove food as it is not held by this tile");
         return;
     }
 
-    held_foods.erase(food_iterator);
+    m_held_foods.erase(food_iterator);
 }
 
 void Tile::remove_all_foods()
 {
-    held_foods.clear();
+    m_held_foods.clear();
 }
 
 void Tile::render() const
 {
-    if (held_body_part)
+    if (m_held_body_part)
     {
-        auto sprite_component { held_body_part.get()->get_component<Sprite_component>() };
+        auto sprite_component { m_held_body_part.get()->get_component<Sprite_component>() };
 
         if (sprite_component)
         {
@@ -102,9 +102,9 @@ void Tile::render() const
         }
     }
 
-    if (held_foods.size() != 0)
+    if (m_held_foods.size() != 0)
     {
-        auto topmost_food { held_foods.rbegin() };
+        auto topmost_food { m_held_foods.rbegin() };
         auto sprite_component { topmost_food->get()->get_component<Sprite_component>() };
 
         if (sprite_component)
@@ -114,9 +114,9 @@ void Tile::render() const
         }
     }
 
-    if (held_environment_object)
+    if (m_held_environment_object)
     {
-        auto sprite_component { held_environment_object.get()->get_component<Sprite_component>() };
+        auto sprite_component { m_held_environment_object.get()->get_component<Sprite_component>() };
 
         if (sprite_component)
         {
@@ -128,10 +128,10 @@ void Tile::render() const
 
 std::shared_ptr<Body_part> Tile::get_held_body_part()
 {
-    return held_body_part;
+    return m_held_body_part;
 }
 
 std::set<std::shared_ptr<Food>> Tile::get_held_foods() const
 {
-    return held_foods;
+    return m_held_foods;
 }

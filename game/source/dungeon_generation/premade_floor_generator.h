@@ -15,6 +15,6 @@ class Premade_floor_generator : public I_floor_generator
     void place_floor(int row, int column);
 
     Spritesheet brogue_tiles { "data/tiles.png", 128.0f, 232.0f }; // TODO: Temporary
-    int floor_rows {};
-    int floor_columns {};
+    int m_floor_rows {};
+    int m_floor_columns {};
 };

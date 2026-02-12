@@ -3,11 +3,11 @@
 
 Turn_based_entity::Tick_result Turn_based_entity::tick()
 {
-    current_energy += energy_regeneration;
+    m_current_energy += m_energy_regeneration;
 
-    if (current_energy >= turn_energy_cost)
+    if (m_current_energy >= m_turn_energy_cost)
     {
-        current_energy -= turn_energy_cost;
+        m_current_energy -= m_turn_energy_cost;
         take_turn();
         return taking_turn;
     }

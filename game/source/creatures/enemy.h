@@ -20,8 +20,6 @@ class Enemy : public Creature<Turn_based_entity> // TODO: Right now this is a cl
     Action_result set_position(const Position& position) override;
     Action_result attack_adjacent_target(const std::vector<std::shared_ptr<Body_part>>& targets);
 
-    // void add_body_part(std::shared_ptr<Body_part> body_part) override;
-
   public:
     void take_turn() override;
 
@@ -31,5 +29,6 @@ class Enemy : public Creature<Turn_based_entity> // TODO: Right now this is a cl
 
   private:
     Action_result move_towards_weighted_random_direction(const std::vector<Direction>& occupied_directions);
-    Direction last_move_direction {};
+
+    Direction m_last_move_direction {};
 };

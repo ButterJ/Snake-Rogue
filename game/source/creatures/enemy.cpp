@@ -93,7 +93,7 @@ Action_result Enemy::move_towards_weighted_random_direction(const std::vector<Di
     Position current_position { body_parts.front()->get_position() };
 
     std::vector<double> weights {};
-    auto opposite_direction_from_last_move { last_move_direction.get_opposite_direction() };
+    auto opposite_direction_from_last_move { m_last_move_direction.get_opposite_direction() };
 
     for (auto direction : Direction::Orthogonal_directions)
     {
@@ -121,7 +121,7 @@ Action_result Enemy::move_towards_weighted_random_direction(const std::vector<Di
         {
             direction_weight /= 4.0; // TODO: Remove magic number
         }
-        else if (direction == last_move_direction)
+        else if (direction == m_last_move_direction)
         {
             direction_weight *= 15.0; // TODO: Remove magic number
         }
@@ -132,14 +132,14 @@ Action_result Enemy::move_towards_weighted_random_direction(const std::vector<Di
     if (std::all_of(weights.begin(), weights.end(), [](double weight)
                     { return weight == 0.0; }))
     {
-        last_move_direction = Direction::Zero;
+        m_last_move_direction = Direction::Zero;
         return Action_result::failure;
     }
 
     int random_direction_index { std::discrete_distribution<int> { weights[0], weights[1], weights[2], weights[3] }(Random_number_generator::mersenne_twister) };
     auto move_direction { Direction::Orthogonal_directions[random_direction_index] };
     move(move_direction);
-    last_move_direction = move_direction;
+    m_last_move_direction = move_direction;
 
     return Action_result::success;
 }
