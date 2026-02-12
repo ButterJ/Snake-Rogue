@@ -2,13 +2,6 @@
 
 #include "layer.h"
 
-#include "game.h"
-#include "random_number_generator.h"
-#include "sdl_manager.h"
-
-#include <SDL3_image/SDL_image.h>
-#include <iostream>
-
 class Test_layer : public Core::Layer
 {
   public:

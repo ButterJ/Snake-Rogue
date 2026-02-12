@@ -1,6 +1,7 @@
 #pragma once
 
 #include "game_object.h"
+
 #include "position.h"
 #include "sprite_component.h"
 #include "sprite_specification.h"

@@ -1,11 +1,11 @@
 #include "dungeon_layer.h"
 
 #include "food.h"
-#include "player_controlled_entity.h"
 #include "position.h"
 #include "sprite_specification.h"
 
 #include <SDL3_image/SDL_image.h>
+
 #include <memory>
 
 void Dungeon_layer::on_start() // TODO: Replace test functionality

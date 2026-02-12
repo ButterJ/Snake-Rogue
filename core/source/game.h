@@ -1,8 +1,9 @@
 #pragma once
 
+#include "singleton.h"
+
 #include "layer.h"
 #include "sdl_manager.h"
-#include "singleton.h"
 
 #include <memory>
 #include <vector>

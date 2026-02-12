@@ -1,9 +1,10 @@
 #pragma once
 
+#include "game_object.h"
+
 #include "action_result.h"
 #include "collider_component.h"
 #include "direction.h"
-#include "game_object.h"
 #include "health_component.h"
 #include "position.h"
 #include "sprite_component.h"

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "colour.h"
 #include "layer.h"
+
+#include "colour.h"
 
 class Background_layer : public Core::Layer
 {

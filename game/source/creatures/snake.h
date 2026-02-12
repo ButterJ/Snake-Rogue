@@ -5,14 +5,10 @@
 #include "body_part.h"
 #include "direction.h"
 #include "food.h"
-#include "i_player_entity.h"
 #include "player_controlled_entity.h"
 #include "resource_bar.h"
-#include "sprite_component.h"
 #include "sprite_specification.h"
-#include "turn_based_entity.h"
 
-#include <list>
 #include <memory>
 #include <set>
 

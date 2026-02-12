@@ -1,7 +1,6 @@
 #include "tile.h"
 
 #include "collider_component.h"
-#include "environment_object.h"
 
 #include <SDL3/SDL_log.h>
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "environment_object.h"
 #include "tile.h"
 #include "vector"
 

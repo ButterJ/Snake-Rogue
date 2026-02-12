@@ -1,15 +1,14 @@
 #pragma once
 
-#include "colour.h"
 #include "component.h"
+
+#include "colour.h"
 #include "game.h"
-#include "position.h"
 #include "sdl_manager.h"
 #include "sprite_specification.h"
 #include "transform_component.h"
 
 #include <memory>
-#include <string>
 
 class Sprite_component : public Component
 {

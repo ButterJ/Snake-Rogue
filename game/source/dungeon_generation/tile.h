@@ -6,7 +6,6 @@
 
 #include <memory>
 #include <set>
-#include <vector>
 
 class Tile // TODO: Rewrite, as it is pretty hardcoded right now
 {

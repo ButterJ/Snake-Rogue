@@ -2,7 +2,6 @@
 
 #include "dirt.h"
 #include "environment_object.h"
-#include "game_object.h"
 #include "wall.h"
 
 #include <experimental/mdspan>

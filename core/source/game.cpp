@@ -1,6 +1,6 @@
 #include "game.h"
 
-#include <SDL3/SDL_timer.h> // On linux the timer in SDL_timer.h is small. If this leads to problems on windows, look for a solution.
+#include <SDL3/SDL_timer.h>
 
 namespace Core
 {

@@ -1,6 +1,7 @@
 #include "turn_based_system.h"
-#include "i_player_entity.h"
+
 #include <SDL3/SDL_log.h>
+
 #include <assert.h>
 
 void Turn_based_system::update(float delta_time)
@@ -152,7 +153,7 @@ void Turn_based_system::release_entity(std::weak_ptr<Turn_based_entity> turn_bas
         }
     };
 
-    if (dynamic_cast<I_player_entity*>(turn_based_entity.lock().get()))
+    if (dynamic_cast<Player_controlled_entity*>(turn_based_entity.lock().get()))
     {
         player_controlled_entities.remove_if(lambda);
         return;

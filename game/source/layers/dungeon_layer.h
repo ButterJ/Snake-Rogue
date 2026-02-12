@@ -1,13 +1,11 @@
 #pragma once
 
+#include "layer.h"
+
 #include "enemy.h"
 #include "floor.h"
-#include "layer.h"
 #include "premade_floor_generator.h"
 #include "snake.h"
-#include "sprite_component.h"
-#include "spritesheet.h"
-#include "transform_component.h"
 #include "turn_based_system.h"
 
 #include <memory>
