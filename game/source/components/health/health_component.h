@@ -19,11 +19,11 @@ class Health_component : public Component
     int get_health() const;
     int get_max_health() const;
 
-    void on_death();
-
     eventpp::CallbackList<void()> On_death_callback {};
 
   private:
+    void on_death();
+
     int m_max_health { 100 };
     int m_health { 100 };
 };

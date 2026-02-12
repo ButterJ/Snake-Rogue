@@ -10,8 +10,8 @@
 
 Snake::Snake(int number_of_body_parts, const Sprite_specification& sprite_specification) : Creature<Player_controlled_entity>(number_of_body_parts, sprite_specification)
 {
-    satiation_bar.On_bar_filled_callback.append([this]()
-                                                { on_satiation_bar_filled(); });
+    m_satiation_bar.On_bar_filled_callback.append([this]()
+                                                  { on_satiation_bar_filled(); });
 }
 
 Action_result Snake::set_position(const Position& position) // TODO: Think about how to not stack all body parts on each other
@@ -69,7 +69,7 @@ void Snake::eat_foods(std::set<std::shared_ptr<Food>> foods)
 {
     for (auto food : foods)
     {
-        satiation_bar.change_value(food->get_satiation_value());
+        m_satiation_bar.change_value(food->get_satiation_value());
     }
 }
 
@@ -84,7 +84,7 @@ void Snake::on_satiation_bar_filled()
     auto body_part { create_body_part() };
     add_body_part(body_part);
 
-    satiation_bar.set_value(0);
+    m_satiation_bar.set_value(0);
 }
 
 const Snake::Input_result Snake::process_input()
@@ -161,6 +161,7 @@ Action_result Snake::attack(const Direction& direction)
     return Action_result::failure;
 }
 
+// TODO: Cut off body parts should spawn food
 void Snake::on_body_part_death(std::shared_ptr<Body_part> dead_body_part)
 {
     bool is_head_dead { dead_body_part == *body_parts.begin() };
@@ -198,11 +199,6 @@ void Snake::on_body_part_death(std::shared_ptr<Body_part> dead_body_part)
     {
         die();
     }
-}
-
-void Snake::take_turn()
-{
-    // Player turns are driven by input in Turn_based_system::update
 }
 
 void Snake::die()

@@ -27,6 +27,7 @@ class Enemy : public Creature<Turn_based_entity> // TODO: Right now this is a cl
 
   protected:
     void on_body_part_death(std::shared_ptr<Body_part> dead_body_part) override;
+    void die() override;
 
   private:
     Action_result move_towards_weighted_random_direction(const std::vector<Direction>& occupied_directions);

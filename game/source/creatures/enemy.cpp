@@ -1,6 +1,7 @@
 #include "enemy.h"
 
 #include "dungeon_layer.h"
+#include "food.h"
 #include "random_number_generator.h"
 
 #include <SDL3/SDL_log.h>
@@ -10,29 +11,38 @@
 Action_result Enemy::move(const Direction& direction) // TODO: Return correct action result
 {
     body_parts.front().get()->move(direction);
+    m_last_position = get_head_position();
     return Action_result::success;
 }
 
 Action_result Enemy::set_position(const Position& position) // TODO: Return correct action result
 {
     body_parts.front().get()->set_position(position);
+    m_last_position = get_head_position();
     return Action_result::success;
 }
-
-// void Enemy::add_body_part(std::shared_ptr<Body_part> body_part)
-// {
-//     body_parts.push_back(body_part);
-//     body_part->On_death_callback.append([this]() // TODO: This is temporary where it is assumed that one body part dying means that the whole creature dies
-//                                         { die(); });
-// }
 
 void Enemy::on_body_part_death(std::shared_ptr<Body_part> body_part)
 {
     die();
 }
 
+void Enemy::die() // TODO: Food spawn needs to be cleaned up
+{
+    Spritesheet food_spritesheet { "data/hashtag_01.png", 16.0f, 16.0f };
+    Sprite_specification food_sprite_specification { food_spritesheet.get_sprite_specification(0, 0) };
+
+    std::shared_ptr<Food> food_drop { std::make_shared<Food>(get_head_position(), food_sprite_specification, 50) };
+    Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(get_head_position())->add_food(food_drop);
+
+    Turn_based_entity::die();
+}
+
 void Enemy::take_turn()
 {
+    Creature::take_turn();
+
+    // Basic enemy behaviour
     std::vector<std::shared_ptr<Body_part>> adjacent_targets {};
     std::vector<Direction> occupied_directions {};
 
