@@ -168,6 +168,12 @@ void Snake::on_body_part_death(std::shared_ptr<Body_part> dead_body_part)
     if (is_head_dead)
     {
         body_parts.erase(body_parts.begin());
+
+        if (body_parts.size() == 0)
+        {
+            die();
+        }
+
         return;
     }
 
