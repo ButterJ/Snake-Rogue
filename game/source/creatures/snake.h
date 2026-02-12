@@ -35,5 +35,7 @@ class Snake : public Creature<Player_controlled_entity>
 
   protected:
     void take_turn() override;
+    void die() override;
+
     Resource_bar satiation_bar { 100 };
 };

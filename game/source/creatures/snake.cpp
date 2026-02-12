@@ -2,7 +2,10 @@
 #include "dungeon_layer.h"
 #include "floor.h"
 
+#include <SDL3/SDL_events.h>
 #include <SDL3/SDL_keyboard.h>
+#include <SDL3/SDL_messagebox.h>
+
 #include <string>
 
 Snake::Snake(int number_of_body_parts, const Sprite_specification& sprite_specification) : Creature<Player_controlled_entity>(number_of_body_parts, sprite_specification)
@@ -88,6 +91,11 @@ const Snake::Input_result Snake::process_input()
 {
     const bool* key_states = SDL_GetKeyboardState(0); // TODO: Disallow diagonal movement
 
+    if (key_states[SDL_SCANCODE_PERIOD])
+    {
+        return Input_result::turn_finished;
+    }
+
     Direction direction_input {};
     if (key_states[SDL_SCANCODE_W])
     {
@@ -155,6 +163,13 @@ Action_result Snake::attack(const Direction& direction)
 
 void Snake::on_body_part_death(std::shared_ptr<Body_part> dead_body_part)
 {
+    bool is_head_dead { dead_body_part == *body_parts.begin() };
+    if (is_head_dead)
+    {
+        body_parts.erase(body_parts.begin());
+        return;
+    }
+
     bool dead_body_part_found { false };
 
     for (auto it { body_parts.begin() }; it != body_parts.end();)
@@ -178,9 +193,26 @@ void Snake::on_body_part_death(std::shared_ptr<Body_part> dead_body_part)
 
         it++;
     }
+
+    if (body_parts.size() == 0)
+    {
+        die();
+    }
 }
 
 void Snake::take_turn()
 {
     // Player turns are driven by input in Turn_based_system::update
+}
+
+void Snake::die()
+{
+    Turn_based_entity::die();
+
+    // TODO: The following needs to be removed as it is just for the prototype
+    SDL_Event quit_event {};
+    quit_event.type = SDL_EVENT_QUIT;
+    SDL_PushEvent(&quit_event);
+
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You died", "You have died. Try again by starting the game again", NULL);
 }

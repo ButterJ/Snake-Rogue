@@ -2,6 +2,7 @@
 
 #include <SDL3/SDL_log.h>
 #include <SDL3_image/SDL_image.h>
+
 #include <string>
 
 namespace Core
