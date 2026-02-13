@@ -35,7 +35,6 @@ namespace Core
         SDL_Texture& get_texture(std::filesystem::path file_path);
 
       private:
-        void create_window_and_renderer();
         void set_window_dimensions(int windowWidth, int windowHeight);
 
         SDL_Texture* load_texture(std::filesystem::path file_path);

@@ -10,10 +10,18 @@
 
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv)
 {
-    // Core::Game::get_instance().push_layer<Test_layer>();
-    Core::Game::get_instance().push_layer<Background_layer>();
-    Core::Game::get_instance().push_layer<Dungeon_layer>();
-    Core::Game::get_instance().start();
+    try
+    {
+        // Core::Game::get_instance().push_layer<Test_layer>();
+        Core::Game::get_instance().push_layer<Background_layer>();
+        Core::Game::get_instance().push_layer<Dungeon_layer>();
+        Core::Game::get_instance().start();
+    }
+    catch (...)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Exception caught while starting the app.");
+        return SDL_APP_FAILURE;
+    }
 
     return SDL_APP_CONTINUE;
 }

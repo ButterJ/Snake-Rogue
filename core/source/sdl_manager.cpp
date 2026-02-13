@@ -8,29 +8,36 @@
 namespace Core
 {
 
-    void Sdl_manager::initialize() // TODO: Rewrite error handling, orient on the SDL CreateWindowAndRenderer documentation
-                                   // TODO: Maybe make a function call_sdl_function which will take a function pointer and throw errors.
+    void Sdl_manager::initialize()
     {
         try
         {
             SDL_SetLogPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_DEBUG);
-            SDL_SetAppMetadata("Snake Rogue", "0.1.0", "Snake Rogue");
-            SDL_InitSubSystem(SDL_INIT_VIDEO);
-            create_window_and_renderer();
-            SDL_SetRenderLogicalPresentation(m_state.renderer, m_state.window_specification.logical_width, m_state.window_specification.logical_height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
-        }
-        catch (std::string error_message)
-        {
-            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", error_message.c_str(), nullptr);
-        }
-    }
 
-    void Sdl_manager::create_window_and_renderer()
-    {
-        if (!SDL_CreateWindowAndRenderer(m_state.window_specification.window_name, m_state.window_specification.window_width, m_state.window_specification.window_height, SDL_WINDOW_RESIZABLE, &m_state.window, &m_state.renderer))
+            if (!SDL_SetAppMetadata("Snake Rogue", "0.1.0", "Snake Rogue"))
+            {
+                throw SDL_GetError();
+            }
+
+            if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
+            {
+                throw SDL_GetError();
+            }
+
+            if (!SDL_CreateWindowAndRenderer(m_state.window_specification.window_name, m_state.window_specification.window_width, m_state.window_specification.window_height, SDL_WINDOW_RESIZABLE, &m_state.window, &m_state.renderer))
+            {
+                throw SDL_GetError();
+            }
+
+            if (!SDL_SetRenderLogicalPresentation(m_state.renderer, m_state.window_specification.logical_width, m_state.window_specification.logical_height, SDL_LOGICAL_PRESENTATION_LETTERBOX))
+            {
+                throw SDL_GetError();
+            }
+        }
+        catch (char* error_message)
         {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
-            cleanup();
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", error_message, nullptr);
+            throw error_message;
         }
     }
 
