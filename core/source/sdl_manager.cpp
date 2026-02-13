@@ -82,7 +82,7 @@ namespace Core
         return *loaded_texture;
     }
 
-    SDL_Texture* Sdl_manager::load_texture(std::filesystem::path file_path) // TODO: Should destroy textures again
+    SDL_Texture* Sdl_manager::load_texture(std::filesystem::path file_path)
     {
         SDL_Texture* loaded_texture { IMG_LoadTexture(m_state.renderer, file_path.string().c_str()) };
         m_loaded_textures[file_path] = loaded_texture;
@@ -90,11 +90,22 @@ namespace Core
         return loaded_texture;
     }
 
+    void Sdl_manager::destroy_loaded_textures()
+    {
+        for (auto loaded_texture_pair : m_loaded_textures)
+        {
+            SDL_DestroyTexture(loaded_texture_pair.second);
+        }
+
+        m_loaded_textures.clear();
+    }
+
     void Sdl_manager::cleanup()
     {
         SDL_DestroyRenderer(m_state.renderer);
         SDL_DestroyWindow(m_state.window);
         SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        destroy_loaded_textures();
         SDL_Quit();
     }
 

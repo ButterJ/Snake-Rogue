@@ -38,6 +38,7 @@ namespace Core
         void set_window_dimensions(int windowWidth, int windowHeight);
 
         SDL_Texture* load_texture(std::filesystem::path file_path);
+        void destroy_loaded_textures();
 
         std::map<std::filesystem::path, SDL_Texture*> m_loaded_textures {};
 
