@@ -27,17 +27,18 @@ std::shared_ptr<Transform_component> Body_part::get_transform_component()
 
 Action_result Body_part::set_position(const Position& position)
 {
-    bool is_position_occupied { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->is_tile_occupied(position) };
+    auto current_floor { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor() };
+    bool is_position_occupied { current_floor->is_tile_occupied(position) };
 
     if (is_position_occupied)
     {
         return Action_result::failure;
     }
 
-    auto previous_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(get_position()) };
+    auto previous_tile { current_floor->get_tile_at_position(get_position()) };
     previous_tile.get()->remove_game_object(Tile::Occupant_type::body_part); // TODO: I don't like that the body part knows of the tile like this
     m_transform_component.get()->position = position;
-    auto new_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(get_position()) };
+    auto new_tile { current_floor->get_tile_at_position(get_position()) };
     new_tile.get()->add_game_object(Tile::Occupant_type::body_part, shared_from_this());
 
     return Action_result::success;
