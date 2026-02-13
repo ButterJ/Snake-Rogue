@@ -9,11 +9,10 @@
 class Environment_object : public Game_object
 {
   public:
-    //~Environment_object() = 0; // TODO: See if this is needed
+    Environment_object(const Position& position);
+    virtual ~Environment_object() = 0;
 
   protected:
-    Environment_object(const Position& position);
-
     std::shared_ptr<Transform_component> m_transform_component;
     std::shared_ptr<Sprite_component> m_sprite_component;
 };

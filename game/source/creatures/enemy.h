@@ -10,7 +10,8 @@
 #include <memory>
 #include <vector>
 
-class Enemy : public Creature<Turn_based_entity> // TODO: Right now this is a class to test out enemies in the game. Should probably be named Monster or Creature and be a base clas
+// TODO: Right now this is a class is for testing out the single enemy type in the prototype. Should be named Monster and be a base clas
+class Enemy : public Creature<Turn_based_entity>
 {
   public:
     Enemy(int number_of_body_parts, const Sprite_specification& sprite_specification);

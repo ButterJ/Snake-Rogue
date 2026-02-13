@@ -13,18 +13,18 @@ Enemy::Enemy(int number_of_body_parts, const Sprite_specification& sprite_specif
 {
 }
 
-Action_result Enemy::move(const Direction& direction) // TODO: Return correct action result
+Action_result Enemy::move(const Direction& direction)
 {
-    m_body_parts.front().get()->move(direction);
+    Action_result action_result { m_body_parts.front().get()->move(direction) };
     m_last_position = get_head_position();
-    return Action_result::success;
+    return action_result;
 }
 
-Action_result Enemy::set_position(const Position& position) // TODO: Return correct action result
+Action_result Enemy::set_position(const Position& position)
 {
-    m_body_parts.front().get()->set_position(position);
+    Action_result action_result { m_body_parts.front().get()->set_position(position) };
     m_last_position = get_head_position();
-    return Action_result::success;
+    return action_result;
 }
 
 void Enemy::on_body_part_death(std::shared_ptr<Body_part> body_part)

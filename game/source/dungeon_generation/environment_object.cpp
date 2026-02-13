@@ -5,3 +5,7 @@ Environment_object::Environment_object(const Position& position)
 {
     components.push_back(m_transform_component);
 }
+
+Environment_object::~Environment_object()
+{
+}

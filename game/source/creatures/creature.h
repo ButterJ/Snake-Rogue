@@ -14,7 +14,7 @@
 
 template <typename T_turn_based_entity>
     requires(std::derived_from<T_turn_based_entity, Turn_based_entity>)
-class Creature : public T_turn_based_entity // TODO: Add max body parts restriction
+class Creature : public T_turn_based_entity
 {
   public:
     Creature(int number_of_body_parts, const Sprite_specification& sprite_specification);

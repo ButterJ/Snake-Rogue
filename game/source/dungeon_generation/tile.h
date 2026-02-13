@@ -7,7 +7,8 @@
 #include <memory>
 #include <set>
 
-class Tile // TODO: Rewrite, as it is pretty hardcoded right now
+// TODO: Rewrite, as it is pretty hardcoded right now
+class Tile
 {
   public:
     enum Occupant_type

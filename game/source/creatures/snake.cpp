@@ -33,7 +33,7 @@ Action_result Snake::set_position(const Position& position) // TODO: Think about
         }
     }
 
-    return Action_result::success; // TODO: Need to return the correct action result
+    return Action_result::success;
 }
 
 Action_result Snake::move(const Direction& direction)
@@ -143,7 +143,7 @@ Snake::Input_result Snake::on_direction_input(const Direction& direction)
         return turn_finished;
     }
 
-    return invalid_action; // TODO: See if none is needed to be returned
+    return invalid_action;
 }
 
 Action_result Snake::attack(const Direction& direction)
@@ -213,7 +213,7 @@ void Snake::die()
 {
     Turn_based_entity::die();
 
-    // TODO: The following needs to be removed as it is just for the prototype
+    // TODO: The following needs to be replaced with actual death handling. It is just for the prototype.
     SDL_Event quit_event {};
     quit_event.type = SDL_EVENT_QUIT;
     SDL_PushEvent(&quit_event);

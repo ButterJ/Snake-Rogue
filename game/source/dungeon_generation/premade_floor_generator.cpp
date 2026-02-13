@@ -7,7 +7,8 @@
 #include <experimental/mdspan>
 #include <memory>
 
-const std::shared_ptr<Floor> Premade_floor_generator::generate_floor(int floor_rows, int floor_columns) // TODO: This function cannot be resused right now
+// TODO: This function cannot be resused right now. One floor generator should be able to generate multiple different floors
+const std::shared_ptr<Floor> Premade_floor_generator::generate_floor(int floor_rows, int floor_columns)
 {
     m_floor_rows = floor_rows;
     m_floor_columns = floor_columns;
