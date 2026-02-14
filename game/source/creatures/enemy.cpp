@@ -39,7 +39,7 @@ void Enemy::die() // TODO: Food spawn needs to be cleaned up
 
     std::shared_ptr<Food> food_drop { std::make_shared<Food>(get_head_position(), food_sprite_specification, 50) };
     auto current_floor { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor() };
-    current_floor->get_tile_at_position(get_head_position())->add_food(food_drop);
+    current_floor->get_tile_at_position(get_head_position())->add_game_object(Tile::Occupant_type::food, food_drop);
 
     Turn_based_entity::die();
 }

@@ -8,19 +8,31 @@
 
 bool Tile::is_occupied() const
 {
-    if (m_held_body_part)
+    if (is_occupied_by_type(Occupant_type::body_part))
     {
-        if (m_held_body_part.get()->get_component<Collider_component>())
-        {
-            return true;
-        }
+        return true;
     }
 
-    if (m_held_environment_object)
+    if (is_occupied_by_type(Occupant_type::environment_object))
     {
-        if (m_held_environment_object.get()->get_component<Collider_component>())
+        return true;
+    }
+
+    return false;
+}
+
+bool Tile::is_occupied_by_type(Occupant_type occupant_type) const
+{
+    auto occupant_pair { m_held_game_objects.find(occupant_type) };
+
+    if (occupant_pair != m_held_game_objects.end())
+    {
+        for (auto occupant : occupant_pair->second)
         {
-            return true;
+            if (occupant->get_component<Collider_component>())
+            {
+                return true;
+            }
         }
     }
 
@@ -29,108 +41,100 @@ bool Tile::is_occupied() const
 
 void Tile::add_game_object(Occupant_type tile_occupant_type, std::shared_ptr<Game_object> game_object)
 {
-    switch (tile_occupant_type)
+    if (!m_held_game_objects.contains(tile_occupant_type))
     {
-        case environment_object:
-            // assert(!held_environment_object && "Tile already has an environment object");
-            m_held_environment_object = game_object;
-            break;
-        case body_part:
-            // assert(!held_body_part && "Tile already has a body part");
-            auto cast_body_part { dynamic_pointer_cast<Body_part>(game_object) };
-
-            if (!cast_body_part)
-            {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Cannot cast the given game object to a body part!");
-                return;
-            }
-
-            m_held_body_part = cast_body_part;
-            break;
-    }
-}
-
-void Tile::remove_game_object(Occupant_type Tile_occupant_type)
-{
-    switch (Tile_occupant_type)
-    {
-        case environment_object:
-            // assert(held_environment_object && "Tile has no environment object to remove");
-            m_held_environment_object = nullptr;
-            break;
-        case body_part:
-            // assert(held_body_part && "Tile has no body part to remove");
-            m_held_body_part = nullptr;
-            break;
-    }
-}
-
-void Tile::add_food(std::shared_ptr<Food> food)
-{
-    m_held_foods.insert(food);
-}
-
-void Tile::remove_food(std::shared_ptr<Food> food)
-{
-    auto food_iterator = m_held_foods.find(food);
-
-    if (food_iterator == m_held_foods.end())
-    {
-        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Could not remove food as it is not held by this tile");
+        m_held_game_objects.insert({ tile_occupant_type, std::set<std::shared_ptr<Game_object>> { game_object } });
         return;
     }
 
-    m_held_foods.erase(food_iterator);
+    auto game_objects_of_type { m_held_game_objects.find(tile_occupant_type) };
+    game_objects_of_type->second.insert(game_object);
 }
 
-void Tile::remove_all_foods()
+void Tile::remove_game_object(Occupant_type tile_occupant_type)
 {
-    m_held_foods.clear();
+    auto game_objects_of_type { m_held_game_objects.find(tile_occupant_type) };
+
+    if (game_objects_of_type != m_held_game_objects.end())
+    {
+        game_objects_of_type->second.clear();
+    }
 }
 
 void Tile::render() const
 {
-    if (m_held_body_part)
+    if (render_occupant_type(Occupant_type::body_part))
     {
-        auto sprite_component { m_held_body_part.get()->get_component<Sprite_component>() };
-
-        if (sprite_component)
-        {
-            sprite_component->get()->render();
-            return;
-        }
+        return;
     }
 
-    if (m_held_foods.size() != 0)
+    if (render_occupant_type(Occupant_type::food))
     {
-        auto topmost_food { m_held_foods.rbegin() };
-        auto sprite_component { topmost_food->get()->get_component<Sprite_component>() };
-
-        if (sprite_component)
-        {
-            sprite_component->get()->render();
-            return;
-        }
+        return;
     }
 
-    if (m_held_environment_object)
+    if (render_occupant_type(Occupant_type::environment_object))
     {
-        auto sprite_component { m_held_environment_object.get()->get_component<Sprite_component>() };
-
-        if (sprite_component)
-        {
-            sprite_component->get()->render();
-            return;
-        }
+        return;
     }
 }
 
-std::shared_ptr<Body_part> Tile::get_held_body_part()
+bool Tile::render_occupant_type(Occupant_type occupant_type) const
 {
-    return m_held_body_part;
+    auto occupant_pair { m_held_game_objects.find(occupant_type) };
+
+    if (occupant_pair != m_held_game_objects.end())
+    {
+        for (auto occupant : occupant_pair->second)
+        {
+            auto sprite_component { occupant->get_component<Sprite_component>() };
+            if (sprite_component)
+            {
+                sprite_component->get()->render();
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+std::shared_ptr<Body_part> Tile::get_held_body_part() const
+{
+    auto body_parts_pair { m_held_game_objects.find(Occupant_type::body_part) };
+
+    if (body_parts_pair != m_held_game_objects.end())
+    {
+        if (body_parts_pair->second.size() == 0)
+        {
+            return nullptr;
+        }
+
+        auto game_object { *body_parts_pair->second.begin() };
+        auto body_part { std::dynamic_pointer_cast<Body_part>(game_object) };
+        return body_part;
+    }
+
+    return nullptr;
 }
 
 std::set<std::shared_ptr<Food>> Tile::get_held_foods() const
 {
-    return m_held_foods;
+    auto foods_pair { m_held_game_objects.find(Occupant_type::food) };
+
+    if (foods_pair != m_held_game_objects.end())
+    {
+        auto game_objects { foods_pair->second };
+
+        std::set<std::shared_ptr<Food>> foods {};
+        for (auto game_object : game_objects)
+        {
+            auto food { std::dynamic_pointer_cast<Food>(game_object) };
+            foods.insert(food);
+        }
+
+        return foods;
+    }
+
+    return std::set<std::shared_ptr<Food>> {};
 }

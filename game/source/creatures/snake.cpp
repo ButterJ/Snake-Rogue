@@ -60,7 +60,7 @@ Action_result Snake::move(const Direction& direction)
             auto head_tile { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor()->get_tile_at_position(head_position) };
             auto foods_to_eat { head_tile->get_held_foods() };
             eat_foods(foods_to_eat);
-            head_tile->remove_all_foods(); // TODO: I would like this to be in the eat_foods function
+            head_tile->remove_game_object(Tile::Occupant_type::food); // TODO: I would like this to be in the eat_foods function
         }
     }
 

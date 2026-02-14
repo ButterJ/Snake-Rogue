@@ -42,7 +42,7 @@ void Premade_floor_generator::place_wall(int row, int column)
     std::shared_ptr<Wall> wall { std::make_shared<Wall>(position) };
 
     std::mdspan tile_view { m_tiles.data(), m_floor_rows, m_floor_columns };
-    tile_view[std::array { row, column }].get()->add_game_object(Tile::Occupant_type::environment_object, std::dynamic_pointer_cast<Game_object>(wall));
+    tile_view[std::array { row, column }].get()->add_game_object(Tile::Occupant_type::environment_object, wall);
 }
 
 void Premade_floor_generator::place_floor(int row, int column)
@@ -51,5 +51,5 @@ void Premade_floor_generator::place_floor(int row, int column)
     std::shared_ptr<Dirt> dirt { std::make_shared<Dirt>(position) };
 
     std::mdspan tile_view { m_tiles.data(), m_floor_rows, m_floor_columns };
-    tile_view[std::array { row, column }].get()->add_game_object(Tile::Occupant_type::environment_object, std::dynamic_pointer_cast<Game_object>(dirt));
+    tile_view[std::array { row, column }].get()->add_game_object(Tile::Occupant_type::environment_object, dirt);
 }

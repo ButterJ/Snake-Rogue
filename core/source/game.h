@@ -31,7 +31,7 @@ namespace Core
         {
             for (const auto& layer : m_layer_stack)
             {
-                if (auto casted { dynamic_cast<Layer*>(layer.get()) })
+                if (auto casted { dynamic_cast<TLayer*>(layer.get()) })
                 {
                     return casted;
                 }
