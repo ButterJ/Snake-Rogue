@@ -24,14 +24,13 @@ void Turn_based_system::update(float delta_time)
 
     if (m_is_player_turn)
     {
-        assert(!current_player_controlled_entity.expired() && "Trying to process input for an expired turn based entity");
+        assert(current_player_controlled_entity && "Trying to process input for an expired turn based entity");
 
-        Player_controlled_entity::Input_result input_result { current_player_controlled_entity.lock()->process_input() };
+        Player_controlled_entity::Input_result input_result { current_player_controlled_entity->process_input() };
 
-        if (input_result == Player_controlled_entity::Input_result::turn_finished) // TODO: Consider turning body into a function
+        if (input_result == Player_controlled_entity::Input_result::turn_finished)
         {
-            m_is_player_turn = false;
-            m_current_input_delay = 0.0f;
+            on_player_turn_finished();
         }
     }
 }
@@ -39,6 +38,12 @@ void Turn_based_system::update(float delta_time)
 const bool Turn_based_system::is_waiting_for_input_cooldown() const
 {
     return m_current_input_delay < m_delay_after_input;
+}
+
+void Turn_based_system::on_player_turn_finished()
+{
+    m_is_player_turn = false;
+    m_current_input_delay = 0.0f;
 }
 
 const Turn_based_system::Process_result Turn_based_system::process_entity_turns()
@@ -54,27 +59,22 @@ const Turn_based_system::Process_result Turn_based_system::process_entity_turns(
     return continue_processing;
 }
 
-Turn_based_system::Process_result Turn_based_system::tick_player_controlled_entities() // TODO: This function needs to be refactored (split up and unnecessary stuff removed)
+Turn_based_system::Process_result Turn_based_system::tick_player_controlled_entities()
 {
-    if (player_controlled_entities.size() == 0) // Currently the time system is interrupted by players needing to input something. Without player entities the system will never be interrupted. // TODO: Consider making the time system not rely on player entities existing
+    // Currently the time system is interrupted by players needing to input something. Without player entities the system will never be interrupted.
+    // TODO: Consider making the time system not rely on player entities existing
+    assert(player_controlled_entities.size() != 0 && "There are no player entities to process.");
+
+    std::set<std::shared_ptr<Player_controlled_entity>> unprocessed_player_controlled_entities {};
+    std::set_difference(player_controlled_entities.begin(), player_controlled_entities.end(), processed_player_controlled_entities.begin(), processed_player_controlled_entities.end(), std::inserter(unprocessed_player_controlled_entities, unprocessed_player_controlled_entities.begin()));
+
+    for (auto player_controlled_entity : unprocessed_player_controlled_entities)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "There are no player entities to process.");
-        throw;
-    }
+        assert(player_controlled_entity && "Trying to tick an expired turn based entity");
 
-    for (auto player_controlled_entity : player_controlled_entities)
-    {
-        assert(!player_controlled_entity.expired() && "Trying to tick an expired turn based entity");
+        processed_player_controlled_entities.insert(player_controlled_entity);
 
-        auto locked_player_controlled_entity { player_controlled_entity.lock() };
-
-        if (locked_player_controlled_entity->is_processed)
-        {
-            continue;
-        }
-
-        locked_player_controlled_entity->is_processed = true;
-        Turn_based_entity::Tick_result entity_tick_result { locked_player_controlled_entity->tick() };
+        Turn_based_entity::Tick_result entity_tick_result { player_controlled_entity->tick() };
 
         if (entity_tick_result == Turn_based_entity::Tick_result::taking_turn)
         {
@@ -83,10 +83,7 @@ Turn_based_system::Process_result Turn_based_system::tick_player_controlled_enti
         }
     }
 
-    for (auto player_controlled_entity : player_controlled_entities) // TODO: Maybe replace with forall?
-    {
-        player_controlled_entity.lock()->is_processed = false;
-    }
+    processed_player_controlled_entities.clear();
 
     return continue_processing;
 }
@@ -95,69 +92,52 @@ void Turn_based_system::tick_other_entities()
 {
     for (auto turn_based_entity : other_entities)
     {
-        if (turn_based_entity.expired())
-        {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Trying to tick an expired turn based entity");
-            continue;
-        }
+        assert(turn_based_entity && "Trying to tick an expired turn based entity");
 
-        turn_based_entity.lock()->tick();
+        turn_based_entity->tick();
     }
 }
 
-void Turn_based_system::register_entity(std::weak_ptr<Turn_based_entity> turn_based_entity)
+void Turn_based_system::register_entity(std::shared_ptr<Turn_based_entity> turn_based_entity)
 {
-    if (turn_based_entity.expired())
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Trying to register an expired turn based entity");
-        return;
-    }
+    assert(turn_based_entity && "Trying to tick an expired turn based entity");
 
     auto on_death_lambda { [this, turn_based_entity]()
                            {
                                release_entity(turn_based_entity);
                            } };
-    turn_based_entity.lock()->On_death_callback.append(on_death_lambda);
+    turn_based_entity->On_death_callback.append(on_death_lambda);
 
-    std::weak_ptr<Player_controlled_entity> player_controlled_entity { std::dynamic_pointer_cast<Player_controlled_entity>(turn_based_entity.lock()) };
+    std::shared_ptr<Player_controlled_entity> player_controlled_entity { std::dynamic_pointer_cast<Player_controlled_entity>(turn_based_entity) };
 
-    if (player_controlled_entity.lock())
+    if (player_controlled_entity)
     {
-        player_controlled_entities.push_back(player_controlled_entity);
+        player_controlled_entities.insert(player_controlled_entity);
         return;
     }
 
-    other_entities.push_back(turn_based_entity);
+    other_entities.insert(turn_based_entity);
 }
 
-void Turn_based_system::release_entity(std::weak_ptr<Turn_based_entity> turn_based_entity)
+void Turn_based_system::release_entity(std::shared_ptr<Turn_based_entity> turn_based_entity)
 {
-    if (turn_based_entity.expired())
+    assert(turn_based_entity && "Trying to tick an expired turn based entity");
+
+    auto derived { std::dynamic_pointer_cast<Player_controlled_entity>(turn_based_entity) };
+
+    auto player_entity_iterator { player_controlled_entities.find(derived) };
+
+    if (player_entity_iterator != player_controlled_entities.end())
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Trying to release an expired turn based entity");
+        player_controlled_entities.erase(player_entity_iterator);
         return;
     }
 
-    auto entity_to_remove { turn_based_entity.lock() };
+    auto other_entity_iterator { other_entities.find(turn_based_entity) };
 
-    auto lambda {
-        [&entity_to_remove](const std::weak_ptr<Turn_based_entity>& entity_weak)
-        {
-            if (entity_weak.expired())
-            {
-                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Trying to iterate over an expired turn based entity");
-                return false;
-            }
-
-            return entity_weak.lock().get() == entity_to_remove.get();
-        }
-    };
-
-    if (dynamic_cast<Player_controlled_entity*>(turn_based_entity.lock().get()))
+    if (other_entity_iterator != other_entities.end())
     {
-        player_controlled_entities.remove_if(lambda);
+        other_entities.erase(other_entity_iterator);
         return;
     }
-
-    other_entities.remove_if(lambda); // TODO: Should benchmark if this is a performance hit
 }

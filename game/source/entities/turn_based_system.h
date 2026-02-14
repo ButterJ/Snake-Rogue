@@ -6,15 +6,15 @@
 #include <functional>
 #include <list>
 #include <memory>
+#include <set>
 
-// TODO: Refactor
 class Turn_based_system
 {
   public:
-    void update(float delta_time); // TODO: Consider chosing a better name for update
+    void update(float delta_time);
 
-    void register_entity(std::weak_ptr<Turn_based_entity> turn_based_entity);
-    void release_entity(std::weak_ptr<Turn_based_entity> turn_based_entity);
+    void register_entity(std::shared_ptr<Turn_based_entity> turn_based_entity);
+    void release_entity(std::shared_ptr<Turn_based_entity> turn_based_entity);
 
   private:
     enum Process_result
@@ -29,10 +29,13 @@ class Turn_based_system
     void tick_other_entities();
 
     const bool is_waiting_for_input_cooldown() const;
+    void on_player_turn_finished();
 
-    std::list<std::weak_ptr<Player_controlled_entity>> player_controlled_entities {};
-    std::list<std::weak_ptr<Turn_based_entity>> other_entities {};
-    std::weak_ptr<Player_controlled_entity> current_player_controlled_entity {};
+    std::set<std::shared_ptr<Player_controlled_entity>> player_controlled_entities {};
+    std::set<std::shared_ptr<Player_controlled_entity>> processed_player_controlled_entities {};
+
+    std::set<std::shared_ptr<Turn_based_entity>> other_entities {};
+    std::shared_ptr<Player_controlled_entity> current_player_controlled_entity {};
 
     bool m_is_player_turn { false };
     const float m_delay_after_input { 0.1f };
