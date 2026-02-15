@@ -27,7 +27,7 @@ bool Tile::is_occupied_by_type(Occupant_type occupant_type) const
 
     if (occupant_pair != m_held_game_objects.end())
     {
-        for (auto occupant : occupant_pair->second)
+        for (const auto& occupant : occupant_pair->second)
         {
             if (occupant->get_component<Collider_component>())
             {
@@ -85,7 +85,7 @@ bool Tile::render_occupant_type(Occupant_type occupant_type) const
 
     if (occupant_pair != m_held_game_objects.end())
     {
-        for (auto occupant : occupant_pair->second)
+        for (const auto& occupant : occupant_pair->second)
         {
             auto sprite_component { occupant->get_component<Sprite_component>() };
             if (sprite_component)
@@ -127,7 +127,7 @@ std::set<std::shared_ptr<Food>> Tile::get_held_foods() const
         auto game_objects { foods_pair->second };
 
         std::set<std::shared_ptr<Food>> foods {};
-        for (auto game_object : game_objects)
+        for (const auto& game_object : game_objects)
         {
             auto food { std::dynamic_pointer_cast<Food>(game_object) };
             foods.insert(food);

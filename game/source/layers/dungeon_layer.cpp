@@ -56,7 +56,7 @@ void Dungeon_layer::render_map_tiles()
 {
     const std::vector<std::shared_ptr<Tile>>& tiles { m_current_floor->get_tiles() };
 
-    for (auto tile : tiles)
+    for (const auto& tile : tiles)
     {
         tile.get()->render();
     }

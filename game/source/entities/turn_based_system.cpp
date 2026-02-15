@@ -68,7 +68,7 @@ Turn_based_system::Process_result Turn_based_system::tick_player_controlled_enti
     std::set<std::shared_ptr<Player_controlled_entity>> unprocessed_player_controlled_entities {};
     std::set_difference(player_controlled_entities.begin(), player_controlled_entities.end(), processed_player_controlled_entities.begin(), processed_player_controlled_entities.end(), std::inserter(unprocessed_player_controlled_entities, unprocessed_player_controlled_entities.begin()));
 
-    for (auto player_controlled_entity : unprocessed_player_controlled_entities)
+    for (const auto& player_controlled_entity : unprocessed_player_controlled_entities)
     {
         assert(player_controlled_entity && "Trying to tick an expired turn based entity");
 
@@ -90,7 +90,7 @@ Turn_based_system::Process_result Turn_based_system::tick_player_controlled_enti
 
 void Turn_based_system::tick_other_entities()
 {
-    for (auto turn_based_entity : other_entities)
+    for (const auto& turn_based_entity : other_entities)
     {
         assert(turn_based_entity && "Trying to tick an expired turn based entity");
 

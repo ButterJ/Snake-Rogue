@@ -23,9 +23,9 @@ Action_result Snake::set_position(const Position& position) // TODO: Think about
         return Action_result::failure;
     }
 
-    for (auto i { m_body_parts.begin() }; i != m_body_parts.end(); i++)
+    for (auto it { m_body_parts.begin() }; it != m_body_parts.end(); it++)
     {
-        Action_result action_result { i->get()->set_position(position) };
+        Action_result action_result { it->get()->set_position(position) };
 
         if (action_result == Action_result::failure)
         {
@@ -42,7 +42,7 @@ Action_result Snake::move(const Direction& direction)
 
     auto previous_body_part_position { head->get_transform_component().get()->position + direction };
 
-    for (auto body_part : m_body_parts)
+    for (const auto& body_part : m_body_parts)
     {
         auto body_part_position { body_part.get()->get_transform_component().get()->position };
         auto body_part_move_direction { previous_body_part_position - body_part_position };
@@ -69,7 +69,7 @@ Action_result Snake::move(const Direction& direction)
 
 void Snake::eat_foods(std::set<std::shared_ptr<Food>> foods)
 {
-    for (auto food : foods)
+    for (const auto& food : foods)
     {
         m_satiation_bar.change_value(food->get_satiation_value());
     }

@@ -16,7 +16,7 @@ class Game_object : public std::enable_shared_from_this<Game_object>
         requires std::derived_from<T_component, Component>
     std::optional<std::shared_ptr<T_component>> get_component()
     {
-        for (auto& component : components)
+        for (const auto& component : components)
         {
             auto casted_component = std::dynamic_pointer_cast<T_component>(component);
 

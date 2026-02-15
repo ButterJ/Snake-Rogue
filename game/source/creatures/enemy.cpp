@@ -54,7 +54,7 @@ void Enemy::take_turn()
 
     Position current_position { m_body_parts.front()->get_position() };
 
-    for (auto direction : Direction::Orthogonal_directions)
+    for (const auto& direction : Direction::Orthogonal_directions)
     {
         auto current_floor { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor() };
         auto tile_to_check { current_floor->get_tile_at_position(current_position + direction) };
@@ -101,7 +101,7 @@ Action_result Enemy::move_towards_weighted_random_direction(const std::vector<Di
     std::vector<double> weights {};
     auto opposite_direction_from_last_move { m_last_move_direction.get_opposite_direction() };
 
-    for (auto direction : Direction::Orthogonal_directions)
+    for (const auto& direction : Direction::Orthogonal_directions)
     {
         double direction_weight { 1.0 };
 

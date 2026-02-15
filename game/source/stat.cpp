@@ -46,7 +46,7 @@ float Stat::recalculate_value()
     float sum_percent_additive { 1 };
     float product_percent_multiplicative { 1 };
 
-    for (auto modifier : m_modifiers)
+    for (const auto& modifier : m_modifiers)
     {
         if (modifier.type == Stat_modifier::Type::percent_multiplicative)
         {
