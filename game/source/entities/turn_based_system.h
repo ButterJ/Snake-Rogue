@@ -1,6 +1,5 @@
 #pragma once
 
-#include "player_controlled_entity.h"
 #include "turn_based_entity.h"
 
 #include <functional>

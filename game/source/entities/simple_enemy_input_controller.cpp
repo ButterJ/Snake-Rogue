@@ -1,58 +1,21 @@
-#include "enemy.h"
+#include "simple_enemy_input_controller.h"
 
+#include "direction_input_action.h"
 #include "dungeon_layer.h"
-#include "food.h"
 #include "random_number_generator.h"
 
-#include <SDL3/SDL_log.h>
-
-#include <algorithm>
-
-Enemy::Enemy(int number_of_body_parts, const Sprite_specification& sprite_specification)
-    : Creature<Turn_based_entity>(number_of_body_parts, sprite_specification)
+Simple_enemy_input_controller::Simple_enemy_input_controller(std::vector<std::shared_ptr<Body_part>>& enemy_body_parts)
+    : m_enemy_body_parts { enemy_body_parts }
 {
 }
 
-Action_result Enemy::move(const Direction& direction)
+// TODO: Clean this up
+void Simple_enemy_input_controller::start_deciding_on_action()
 {
-    Action_result action_result { m_body_parts.front().get()->move(direction) };
-    m_last_position = get_head_position();
-    return action_result;
-}
-
-Action_result Enemy::set_position(const Position& position)
-{
-    Action_result action_result { m_body_parts.front().get()->set_position(position) };
-    m_last_position = get_head_position();
-    return action_result;
-}
-
-void Enemy::on_body_part_death(std::shared_ptr<Body_part> body_part)
-{
-    die();
-}
-
-void Enemy::die() // TODO: Food spawn needs to be cleaned up
-{
-    Spritesheet food_spritesheet { "data/hashtag_01.png", 16.0f, 16.0f };
-    Sprite_specification food_sprite_specification { food_spritesheet.get_sprite_specification(0, 0) };
-
-    std::shared_ptr<Food> food_drop { std::make_shared<Food>(get_head_position(), food_sprite_specification, 50) };
-    auto current_floor { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor() };
-    current_floor->get_tile_at_position(get_head_position())->add_game_object(Tile::Occupant_type::food, food_drop);
-
-    Turn_based_entity::die();
-}
-
-void Enemy::take_turn()
-{
-    Creature::take_turn();
-
-    // Basic enemy behaviour
-    std::vector<std::shared_ptr<Body_part>> adjacent_targets {};
+    std::vector<Direction> adjacent_target_directions {};
     std::vector<Direction> occupied_directions {};
 
-    Position current_position { m_body_parts.front()->get_position() };
+    Position current_position { m_enemy_body_parts.front()->get_position() };
 
     for (const auto& direction : Direction::Orthogonal_directions)
     {
@@ -72,31 +35,25 @@ void Enemy::take_turn()
             continue;
         }
 
-        adjacent_targets.push_back(body_part_in_direction); // TODO: Differentiate between target and non target body parts
+        adjacent_target_directions.push_back(direction); // TODO: Differentiate between target and non target body parts
     }
 
-    if (!adjacent_targets.empty())
+    if (!adjacent_target_directions.empty())
     {
-        attack_adjacent_target(adjacent_targets);
+        int random_direction_index { Random_number_generator::get(0, adjacent_target_directions.size() - 1) };
+        auto direction_input_action { std::make_shared<Direction_input_action>(adjacent_target_directions[random_direction_index]) };
+        On_action_decided(direction_input_action);
         return;
     }
 
     move_towards_weighted_random_direction(occupied_directions);
 }
 
-Action_result Enemy::attack_adjacent_target(const std::vector<std::shared_ptr<Body_part>>& targets)
-{
-    int random_body_part_index { Random_number_generator::get(0, targets.size() - 1) };
-    std::shared_ptr<Body_part> body_part_to_attack { targets[random_body_part_index] };
-    body_part_to_attack->change_health(-20); // TODO: Replace magic number
-
-    return Action_result::success;
-}
-
-Action_result Enemy::move_towards_weighted_random_direction(const std::vector<Direction>& occupied_directions)
+// TODO: Handle action failure case properly
+Action_result Simple_enemy_input_controller::move_towards_weighted_random_direction(const std::vector<Direction>& occupied_directions)
 {
     auto current_floor { Core::Game::get_instance().get_layer<Dungeon_layer>()->get_current_floor() };
-    Position current_position { m_body_parts.front()->get_position() };
+    Position current_position { m_enemy_body_parts.front()->get_position() };
 
     std::vector<double> weights {};
     auto opposite_direction_from_last_move { m_last_move_direction.get_opposite_direction() };
@@ -141,8 +98,10 @@ Action_result Enemy::move_towards_weighted_random_direction(const std::vector<Di
 
     int random_direction_index { std::discrete_distribution<int> { weights[0], weights[1], weights[2], weights[3] }(Random_number_generator::mersenne_twister) };
     auto move_direction { Direction::Orthogonal_directions[random_direction_index] };
-    move(move_direction);
     m_last_move_direction = move_direction;
+
+    auto direction_input_action { std::make_shared<Direction_input_action>(move_direction) };
+    On_action_decided(direction_input_action);
 
     return Action_result::success;
 }

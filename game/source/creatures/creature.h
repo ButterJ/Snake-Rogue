@@ -5,20 +5,21 @@
 #include "body_part.h"
 #include "direction.h"
 #include "food.h"
+#include "input_controller.h"
 #include "position.h"
 #include "resource_bar.h"
 #include "sprite_specification.h"
 #include "stat.h"
 
 #include <concepts>
-#include <list>
 #include <memory>
 #include <set>
+#include <vector>
 
 class Creature : public Turn_based_entity
 {
   public:
-    Creature(int number_of_body_parts, const Sprite_specification& sprite_specification);
+    Creature(int number_of_body_parts, const Sprite_specification& sprite_specification, std::shared_ptr<Input_controller> input_controller);
 
     Action_result set_position(const Position& position);
     // Action_result move(const Direction& direction);
@@ -37,8 +38,9 @@ class Creature : public Turn_based_entity
     Action_result attack(const Direction& direction);
     Action_result move(const Direction& direction);
     void eat_foods(std::set<std::shared_ptr<Food>> foods);
+    void on_satiation_bar_filled();
 
-    std::list<std::shared_ptr<Body_part>> m_body_parts {};
+    std::vector<std::shared_ptr<Body_part>> m_body_parts {};
     int m_max_body_parts { 3 };
 
     Sprite_specification m_sprite_specification;

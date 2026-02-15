@@ -2,11 +2,10 @@
 
 #include "layer.h"
 
-#include "creature.h"
-// #include "enemy.h"
 #include "floor.h"
+#include "player_snake.h"
 #include "premade_floor_generator.h"
-// #include "snake.h"
+#include "simple_enemy.h"
 #include "turn_based_system.h"
 
 #include <memory>
@@ -24,9 +23,8 @@ class Dungeon_layer : public Core::Layer
   private:
     void render_map_tiles();
 
-    // std::shared_ptr<Snake> m_snake {};
-    // std::shared_ptr<Enemy> m_enemy {};
-    std::shared_ptr<Creature> m_snake {};
+    std::shared_ptr<Player_snake> m_snake {};
+    std::shared_ptr<Simple_enemy> m_enemy {};
 
     Turn_based_system m_turn_based_system {};
 

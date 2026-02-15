@@ -5,8 +5,8 @@
 #include "floor.h"
 #include "player_input_controller.h" // ! TODO temporary for testing, the creature class itself should not have this
 
-Creature::Creature(int number_of_body_parts, const Sprite_specification& sprite_specification)
-    : Turn_based_entity(std::make_shared<Player_input_controller>())
+Creature::Creature(int number_of_body_parts, const Sprite_specification& sprite_specification, std::shared_ptr<Input_controller> input_controller)
+    : Turn_based_entity(input_controller)
     , m_max_body_parts { number_of_body_parts }
     , m_sprite_specification { sprite_specification }
 {
@@ -15,6 +15,9 @@ Creature::Creature(int number_of_body_parts, const Sprite_specification& sprite_
         std::shared_ptr<Body_part> body_part { create_body_part() };
         add_body_part(body_part);
     }
+
+    m_satiation_bar.On_bar_filled_callback.append([this]()
+                                                  { on_satiation_bar_filled(); });
 }
 
 Action_result Creature::set_position(const Position& position)
@@ -52,10 +55,6 @@ void Creature::add_body_part(std::shared_ptr<Body_part> body_part)
     m_body_parts.push_back(body_part);
     body_part->On_death_callback.append([this, body_part]()
                                         { on_body_part_death(body_part); });
-}
-
-void Creature::on_body_part_death(std::shared_ptr<Body_part> body_part)
-{
 }
 
 Position Creature::get_head_position() const
@@ -156,4 +155,64 @@ void Creature::eat_foods(std::set<std::shared_ptr<Food>> foods)
     {
         m_satiation_bar.change_value(food->get_satiation_value());
     }
+}
+
+// TODO: Cut off body parts should spawn food
+void Creature::on_body_part_death(std::shared_ptr<Body_part> dead_body_part)
+{
+    bool is_head_dead { dead_body_part == *m_body_parts.begin() };
+    if (is_head_dead)
+    {
+        m_body_parts.erase(m_body_parts.begin());
+
+        if (m_body_parts.size() == 0)
+        {
+            die();
+        }
+
+        return;
+    }
+
+    bool dead_body_part_found { false };
+
+    for (auto it { m_body_parts.begin() }; it != m_body_parts.end();)
+    {
+        if (dead_body_part_found)
+        {
+            SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Removing body part after dead body part");
+            // TODO: Instead of this triggering an inefficient chain reaction, continue removing in this for loop.
+            // TODO: To do this, the death callback needs to be removed from the body part.
+            (*it)->die();
+            return;
+        }
+
+        if (*it == dead_body_part)
+        {
+            SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Dead body part found");
+            dead_body_part_found = true;
+            it = m_body_parts.erase(it);
+            continue;
+        }
+
+        it++;
+    }
+
+    if (m_body_parts.size() == 0)
+    {
+        die();
+    }
+}
+
+void Creature::on_satiation_bar_filled()
+{
+    if (m_body_parts.size() >= m_max_body_parts)
+    {
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Leveling up not implemented yet");
+        return;
+    }
+
+    auto body_part { create_body_part() };
+    add_body_part(body_part);
+
+    m_satiation_bar.set_value(0);
 }
