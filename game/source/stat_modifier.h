@@ -11,6 +11,6 @@ struct Stat_modifier
 
     bool operator<(const Stat_modifier& other) const;
 
-    float value {};
     Type type { flat };
+    float value {};
 };

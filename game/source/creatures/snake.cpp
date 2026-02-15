@@ -93,6 +93,60 @@ const Snake::Input_result Snake::process_input()
 {
     const bool* key_states = SDL_GetKeyboardState(0); // TODO: Disallow diagonal movement
 
+    // TODO: Remove the following section once the stat system is complete
+// !Warning: The following region is for testing the stat modifier functionality
+#pragma region Stat modifier testing
+
+    if (key_states[SDL_SCANCODE_1])
+    {
+        Stat_modifier attack_damage_modifier { .type { Stat_modifier::Type::flat }, .value { 10.0f } };
+        attack_damage.apply_modifier(attack_damage_modifier);
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, std::to_string(attack_damage.get_value()).c_str());
+        return turn_finished;
+    }
+
+    if (key_states[SDL_SCANCODE_2])
+    {
+        Stat_modifier attack_damage_modifier { .type { Stat_modifier::Type::flat }, .value { -10.0f } };
+        attack_damage.apply_modifier(attack_damage_modifier);
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, std::to_string(attack_damage.get_value()).c_str());
+        return turn_finished;
+    }
+
+    if (key_states[SDL_SCANCODE_3])
+    {
+        Stat_modifier attack_damage_modifier { .type { Stat_modifier::Type::percent_additive }, .value { 0.1f } };
+        attack_damage.apply_modifier(attack_damage_modifier);
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, std::to_string(attack_damage.get_value()).c_str());
+        return turn_finished;
+    }
+
+    if (key_states[SDL_SCANCODE_4])
+    {
+        Stat_modifier attack_damage_modifier { .type { Stat_modifier::Type::percent_additive }, .value { -0.1f } };
+        attack_damage.apply_modifier(attack_damage_modifier);
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, std::to_string(attack_damage.get_value()).c_str());
+        return turn_finished;
+    }
+
+    if (key_states[SDL_SCANCODE_5])
+    {
+        Stat_modifier attack_damage_modifier { .type { Stat_modifier::Type::percent_multiplicative }, .value { 0.1f } };
+        attack_damage.apply_modifier(attack_damage_modifier);
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, std::to_string(attack_damage.get_value()).c_str());
+        return turn_finished;
+    }
+
+    if (key_states[SDL_SCANCODE_6])
+    {
+        Stat_modifier attack_damage_modifier { .type { Stat_modifier::Type::percent_multiplicative }, .value { -0.1f } };
+        attack_damage.apply_modifier(attack_damage_modifier);
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, std::to_string(attack_damage.get_value()).c_str());
+        return turn_finished;
+    }
+
+#pragma endregion
+
     if (key_states[SDL_SCANCODE_PERIOD])
     {
         return Input_result::turn_finished;

@@ -5,7 +5,7 @@
 #include "eventpp/callbacklist.h"
 
 #include <optional>
-#include <set>
+#include <vector>
 
 // TODO: Consider making this a template class with int or float stats
 class Stat
@@ -15,13 +15,13 @@ class Stat
 
     float get_value() const;
 
-    void add_modifier(Stat_modifier stat_modifier);
+    void apply_modifier(Stat_modifier stat_modifier);
     void remove_modifier(Stat_modifier stat_modifier);
 
     eventpp::CallbackList<void()> On_value_changed {};
 
   private:
-    void recalculate_value();
+    float recalculate_value();
 
     void set_value(float value);
 
@@ -30,5 +30,5 @@ class Stat
     std::optional<float> m_minimum_value {};
     std::optional<float> m_maximum_value {};
 
-    std::set<Stat_modifier> m_stat_modifiers {};
+    std::vector<Stat_modifier> m_modifiers {};
 };

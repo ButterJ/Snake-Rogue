@@ -9,6 +9,7 @@
 #include "resource_bar.h"
 #include "sprite_specification.h"
 #include "stat.h"
+#include "stat_modifier.h"
 
 #include <memory>
 #include <set>
