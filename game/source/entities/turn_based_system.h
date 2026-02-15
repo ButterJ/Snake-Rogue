@@ -11,10 +11,10 @@
 class Turn_based_system
 {
   public:
-    void update(float delta_time);
-
     void register_entity(std::shared_ptr<Turn_based_entity> turn_based_entity);
     void release_entity(std::shared_ptr<Turn_based_entity> turn_based_entity);
+
+    void update(float delta_time);
 
   private:
     enum Process_result
@@ -31,11 +31,11 @@ class Turn_based_system
     const bool is_waiting_for_input_cooldown() const;
     void on_player_turn_finished();
 
-    std::set<std::shared_ptr<Player_controlled_entity>> player_controlled_entities {};
-    std::set<std::shared_ptr<Player_controlled_entity>> processed_player_controlled_entities {};
+    std::set<std::shared_ptr<Turn_based_entity>> player_controlled_entities {};
+    std::set<std::shared_ptr<Turn_based_entity>> processed_player_controlled_entities {};
 
     std::set<std::shared_ptr<Turn_based_entity>> other_entities {};
-    std::shared_ptr<Player_controlled_entity> current_player_controlled_entity {};
+    std::shared_ptr<Turn_based_entity> current_player_controlled_entity {};
 
     bool m_is_player_turn { false };
     const float m_delay_after_input { 0.1f };

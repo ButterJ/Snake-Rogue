@@ -4,6 +4,46 @@
 
 #include <assert.h>
 
+void Turn_based_system::register_entity(std::shared_ptr<Turn_based_entity> turn_based_entity)
+{
+    assert(turn_based_entity && "Trying to tick an expired turn based entity");
+
+    auto on_death_lambda { [this, turn_based_entity]()
+                           {
+                               release_entity(turn_based_entity);
+                           } };
+    turn_based_entity->On_death_callback.append(on_death_lambda);
+
+    if (turn_based_entity->is_player_controlled())
+    {
+        player_controlled_entities.insert(turn_based_entity);
+        return;
+    }
+
+    other_entities.insert(turn_based_entity);
+}
+
+void Turn_based_system::release_entity(std::shared_ptr<Turn_based_entity> turn_based_entity)
+{
+    assert(turn_based_entity && "Trying to tick an expired turn based entity");
+
+    auto player_entity_iterator { player_controlled_entities.find(turn_based_entity) };
+
+    if (player_entity_iterator != player_controlled_entities.end())
+    {
+        player_controlled_entities.erase(player_entity_iterator);
+        return;
+    }
+
+    auto other_entity_iterator { other_entities.find(turn_based_entity) };
+
+    if (other_entity_iterator != other_entities.end())
+    {
+        other_entities.erase(other_entity_iterator);
+        return;
+    }
+}
+
 void Turn_based_system::update(float delta_time)
 {
     if (!m_is_player_turn)
@@ -26,12 +66,20 @@ void Turn_based_system::update(float delta_time)
     {
         assert(current_player_controlled_entity && "Trying to process input for an expired turn based entity");
 
-        Player_controlled_entity::Input_result input_result { current_player_controlled_entity->process_input() };
+        // TODO: Call process input function of current player_input_controller
+        // TODO: Add listener to current player on_turn_finished_callback
+        // TODO: Should not append and remove to the callback every time
+        auto handle = current_player_controlled_entity->On_turn_finished_callback.append([this]()
+                                                                                         { on_player_turn_finished(); });
+        current_player_controlled_entity->try_processing_player_input();
+        current_player_controlled_entity->On_turn_finished_callback.remove(handle);
 
-        if (input_result == Player_controlled_entity::Input_result::turn_finished)
-        {
-            on_player_turn_finished();
-        }
+        // Player_controlled_entity::Input_result input_result { current_player_controlled_entity->process_input() };
+
+        // if (input_result == Player_controlled_entity::Input_result::turn_finished)
+        // {
+        //     on_player_turn_finished();
+        // }
     }
 }
 
@@ -65,7 +113,7 @@ Turn_based_system::Process_result Turn_based_system::tick_player_controlled_enti
     // TODO: Consider making the time system not rely on player entities existing
     assert(player_controlled_entities.size() != 0 && "There are no player entities to process.");
 
-    std::set<std::shared_ptr<Player_controlled_entity>> unprocessed_player_controlled_entities {};
+    std::set<std::shared_ptr<Turn_based_entity>> unprocessed_player_controlled_entities {};
     std::set_difference(player_controlled_entities.begin(), player_controlled_entities.end(), processed_player_controlled_entities.begin(), processed_player_controlled_entities.end(), std::inserter(unprocessed_player_controlled_entities, unprocessed_player_controlled_entities.begin()));
 
     for (const auto& player_controlled_entity : unprocessed_player_controlled_entities)
@@ -95,49 +143,5 @@ void Turn_based_system::tick_other_entities()
         assert(turn_based_entity && "Trying to tick an expired turn based entity");
 
         turn_based_entity->tick();
-    }
-}
-
-void Turn_based_system::register_entity(std::shared_ptr<Turn_based_entity> turn_based_entity)
-{
-    assert(turn_based_entity && "Trying to tick an expired turn based entity");
-
-    auto on_death_lambda { [this, turn_based_entity]()
-                           {
-                               release_entity(turn_based_entity);
-                           } };
-    turn_based_entity->On_death_callback.append(on_death_lambda);
-
-    std::shared_ptr<Player_controlled_entity> player_controlled_entity { std::dynamic_pointer_cast<Player_controlled_entity>(turn_based_entity) };
-
-    if (player_controlled_entity)
-    {
-        player_controlled_entities.insert(player_controlled_entity);
-        return;
-    }
-
-    other_entities.insert(turn_based_entity);
-}
-
-void Turn_based_system::release_entity(std::shared_ptr<Turn_based_entity> turn_based_entity)
-{
-    assert(turn_based_entity && "Trying to tick an expired turn based entity");
-
-    auto derived { std::dynamic_pointer_cast<Player_controlled_entity>(turn_based_entity) };
-
-    auto player_entity_iterator { player_controlled_entities.find(derived) };
-
-    if (player_entity_iterator != player_controlled_entities.end())
-    {
-        player_controlled_entities.erase(player_entity_iterator);
-        return;
-    }
-
-    auto other_entity_iterator { other_entities.find(turn_based_entity) };
-
-    if (other_entity_iterator != other_entities.end())
-    {
-        other_entities.erase(other_entity_iterator);
-        return;
     }
 }

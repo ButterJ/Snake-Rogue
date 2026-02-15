@@ -17,16 +17,20 @@ void Dungeon_layer::on_start()
     Spritesheet enemy_spritesheet { "data/body_part_enemy.png", 16.0f, 16.0f };
 
     // Adding player snake
+    // Sprite_specification snake_sprite_specification { snake_spritesheet.get_sprite_specification(0, 0) };
+    // m_snake = std::make_shared<Snake>(3, snake_sprite_specification);
+    // m_snake.get()->set_position(Position { 20, 7 });
+    // m_turn_based_system.register_entity(m_snake);
     Sprite_specification snake_sprite_specification { snake_spritesheet.get_sprite_specification(0, 0) };
-    m_snake = std::make_shared<Snake>(3, snake_sprite_specification);
+    m_snake = std::make_shared<Creature>(3, snake_sprite_specification);
     m_snake.get()->set_position(Position { 20, 7 });
     m_turn_based_system.register_entity(m_snake);
 
-    // Adding test enemy
+    // // Adding test enemy
     Sprite_specification enemy_sprite_specification { enemy_spritesheet.get_sprite_specification(0, 0) };
-    m_enemy = std::make_shared<Enemy>(1, enemy_sprite_specification);
-    m_enemy.get()->set_position(Position { 2, 1 });
-    m_turn_based_system.register_entity(m_enemy);
+    // m_enemy = std::make_shared<Enemy>(1, enemy_sprite_specification);
+    // m_enemy.get()->set_position(Position { 2, 1 });
+    // m_turn_based_system.register_entity(m_enemy);
 
     // Adding test food
     Position food_position { 10, 6 };
