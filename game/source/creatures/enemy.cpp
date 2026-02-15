@@ -103,24 +103,21 @@ Action_result Enemy::move_towards_weighted_random_direction(const std::vector<Di
 
     for (const auto& direction : Direction::Orthogonal_directions)
     {
-        double direction_weight { 1.0 };
-
         auto it { std::ranges::find(occupied_directions, direction) };
         if (it != occupied_directions.end())
         {
-            direction_weight = 0.0;
-            weights.push_back(direction_weight);
+            weights.emplace_back(0.0);
             continue;
         }
 
         // Can't move into the opposite direction from the last move direction
         if (direction == opposite_direction_from_last_move)
         {
-            direction_weight = 0.0;
-            weights.push_back(direction_weight);
+            weights.emplace_back(0.0);
             continue;
         }
 
+        double direction_weight { 1.0 };
         // TODO: Maybe add so that walls are checked from further away
         auto tile_to_check { current_floor->get_tile_at_position(current_position + direction * 2.0) };
         if (tile_to_check->is_occupied())

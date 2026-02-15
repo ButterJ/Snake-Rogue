@@ -9,7 +9,6 @@
 #include "turn_based_system.h"
 
 #include <memory>
-#include <vector>
 
 class Dungeon_layer : public Core::Layer
 {
