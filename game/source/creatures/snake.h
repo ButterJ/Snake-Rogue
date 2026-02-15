@@ -8,6 +8,7 @@
 #include "player_controlled_entity.h"
 #include "resource_bar.h"
 #include "sprite_specification.h"
+#include "stat.h"
 
 #include <memory>
 #include <set>
@@ -35,4 +36,7 @@ class Snake : public Creature<Player_controlled_entity>
     void die() override;
 
     Resource_bar m_satiation_bar { 100 };
+
+    // !Temporary for testing stats
+    Stat attack_damage { 20.0f, 0.0f };
 };

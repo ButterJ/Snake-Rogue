@@ -8,7 +8,7 @@
 
 #include <memory>
 
-// TODO: Replace test functionality
+// TODO: Replace test functionality after prototype
 void Dungeon_layer::on_start()
 {
     m_current_floor = m_premade_floor_generator->generate_floor(20, 40);

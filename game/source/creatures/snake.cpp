@@ -156,7 +156,10 @@ Action_result Snake::attack(const Direction& direction)
 
     if (body_part_to_attack)
     {
-        body_part_to_attack->change_health(-20); // TODO: Replace magic number
+        auto damage { static_cast<int>(attack_damage.get_value()) };
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, std::to_string(damage).c_str()); // !Temporary
+        body_part_to_attack->change_health(-damage);
+
         return Action_result::success;
     }
 
