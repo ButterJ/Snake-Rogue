@@ -11,7 +11,7 @@ Turn_based_entity::Turn_based_entity(std::shared_ptr<Input_controller> input_con
     auto perform_input_action_lambda { [this](std::shared_ptr<Input_action> input_action)
                                        {
                                            perform_input_action(input_action);
-                                           On_turn_finished_callback(); // TODO: An action might not finish a turn
+                                           on_turn_finished(); // TODO: An action might not finish a turn
                                        } };
 
     input_controller->On_action_decided.append(perform_input_action_lambda);
@@ -57,6 +57,11 @@ void Turn_based_entity::try_processing_player_input()
 void Turn_based_entity::start_turn()
 {
     m_input_controller->start_deciding_on_action();
+}
+
+void Turn_based_entity::on_turn_finished()
+{
+    On_turn_finished_callback();
 }
 
 void Turn_based_entity::die()

@@ -14,8 +14,6 @@ class Stat_modifier
 
     virtual ~Stat_modifier() = default;
 
-    bool operator<(const Stat_modifier& other) const;
-
     Type get_type() const;
     float get_value() const;
 

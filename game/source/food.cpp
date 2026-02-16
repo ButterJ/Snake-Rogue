@@ -8,3 +8,8 @@ Food::Food(const Position& position, const Sprite_specification& sprite_specific
     components.push_back(m_transform_component);
     components.push_back(m_sprite_component);
 }
+
+void Food::eat(std::shared_ptr<Turn_based_entity> turn_based_entity, Resource_bar& satiation_bar, Creature_stats& creature_stats)
+{
+    satiation_bar.change_value(m_satiation);
+}

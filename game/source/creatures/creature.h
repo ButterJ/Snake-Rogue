@@ -22,7 +22,6 @@ class Creature : public Turn_based_entity
     Creature(int number_of_body_parts, const Sprite_specification& sprite_specification, std::shared_ptr<Input_controller> input_controller);
 
     Action_result set_position(const Position& position);
-    // Action_result move(const Direction& direction);
 
     Position get_head_position() const;
 
@@ -40,6 +39,9 @@ class Creature : public Turn_based_entity
     void eat_foods(std::set<std::shared_ptr<Food>> foods);
     void on_satiation_bar_filled();
 
+    void on_turn_finished() override;
+    void apply_health_regeneration();
+
     std::vector<std::shared_ptr<Body_part>> m_body_parts {};
     int m_max_body_parts { 3 };
 
@@ -48,6 +50,5 @@ class Creature : public Turn_based_entity
 
     Resource_bar m_satiation_bar { 100 };
 
-    // !Temporary for testing stats
-    Stat attack_damage { 20.0f, 0.0f };
+    Creature_stats m_stats {};
 };

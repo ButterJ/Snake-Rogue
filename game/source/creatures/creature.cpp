@@ -107,7 +107,7 @@ Action_result Creature::attack(const Direction& direction)
 
     if (body_part_to_attack)
     {
-        auto damage { static_cast<int>(attack_damage.get_value()) };
+        auto damage { static_cast<int>(m_stats.attack_damage.get_value()) };
         SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, std::to_string(damage).c_str()); // !Temporary
         body_part_to_attack->change_health(-damage);
 
@@ -152,7 +152,7 @@ void Creature::eat_foods(std::set<std::shared_ptr<Food>> foods)
 {
     for (const auto& food : foods)
     {
-        m_satiation_bar.change_value(food->get_satiation_value());
+        food->eat(shared_from_this(), m_satiation_bar, m_stats);
     }
 }
 
@@ -214,4 +214,23 @@ void Creature::on_satiation_bar_filled()
     add_body_part(body_part);
 
     m_satiation_bar.set_value(0);
+}
+
+void Creature::on_turn_finished()
+{
+    apply_health_regeneration();
+    Turn_based_entity::on_turn_finished();
+}
+
+void Creature::apply_health_regeneration()
+{
+    auto health_regeneration_value { m_stats.health_regeneration.get_value() };
+
+    if (health_regeneration_value != 0.0f)
+    {
+        for (const auto& body_part : m_body_parts)
+        {
+            body_part->change_health(health_regeneration_value);
+        }
+    }
 }

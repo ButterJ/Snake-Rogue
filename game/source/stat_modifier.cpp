@@ -6,11 +6,6 @@ Stat_modifier::Stat_modifier(Type type, float value)
 {
 }
 
-bool Stat_modifier::operator<(const Stat_modifier& other) const
-{
-    return m_type < other.m_type;
-}
-
 Stat_modifier::Type Stat_modifier::get_type() const
 {
     return m_type;

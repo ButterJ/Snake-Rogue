@@ -15,6 +15,7 @@ class Stat
     Stat(float value, std::optional<float> minimum_value = std::nullopt, std::optional<float> maximum_value = std::nullopt);
 
     float get_value() const;
+    void set_base_value(float base_value);
 
     void apply_modifier(std::shared_ptr<Stat_modifier> stat_modifier);
     void remove_modifier(std::shared_ptr<Stat_modifier> stat_modifier);
@@ -26,7 +27,7 @@ class Stat
 
     void set_value(float value);
 
-    float m_initial_value {};
+    float m_base_value {};
     float m_value {};
     std::optional<float> m_minimum_value {};
     std::optional<float> m_maximum_value {};

@@ -5,7 +5,7 @@
 #include <algorithm>
 
 Stat::Stat(float value, std::optional<float> minimum_value, std::optional<float> maximum_value)
-    : m_initial_value { value }
+    : m_base_value { value }
     , m_value { value }
     , m_minimum_value { minimum_value }
     , m_maximum_value { maximum_value }
@@ -31,6 +31,14 @@ float Stat::get_value() const
     }
 
     return m_value;
+}
+
+void Stat::set_base_value(float base_value)
+{
+    m_base_value = base_value;
+
+    float new_value { recalculate_value() };
+    set_value(new_value);
 }
 
 void Stat::apply_modifier(std::shared_ptr<Stat_modifier> modifier)
@@ -82,7 +90,7 @@ float Stat::recalculate_value()
         }
     }
 
-    float recalculated_value { m_initial_value };
+    float recalculated_value { m_base_value };
     recalculated_value += sum_flat;
     recalculated_value *= sum_percent_additive;
     recalculated_value *= product_percent_multiplicative;

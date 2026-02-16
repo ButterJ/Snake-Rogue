@@ -1,6 +1,6 @@
 #include "dungeon_layer.h"
 
-#include "food.h"
+#include "apple.h"
 #include "position.h"
 #include "sprite_specification.h"
 
@@ -29,11 +29,11 @@ void Dungeon_layer::on_start()
 
     // Adding test food
     Position food_position { 10, 6 };
-    std::shared_ptr<Food> test_food { std::make_shared<Food>(food_position, enemy_sprite_specification, 50) };
+    std::shared_ptr<Food> test_food { std::make_shared<Apple>(food_position, enemy_sprite_specification, 50) };
     get_current_floor()->get_tile_at_position(food_position)->add_game_object(Tile::Occupant_type::food, test_food);
 
     Position food_position_2 { 30, 12 };
-    std::shared_ptr<Food> test_food_2 { std::make_shared<Food>(food_position_2, enemy_sprite_specification, 50) };
+    std::shared_ptr<Food> test_food_2 { std::make_shared<Apple>(food_position_2, enemy_sprite_specification, 50) };
     get_current_floor()->get_tile_at_position(food_position_2)->add_game_object(Tile::Occupant_type::food, test_food_2);
 }
 

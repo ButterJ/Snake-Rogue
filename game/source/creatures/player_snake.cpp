@@ -5,6 +5,7 @@
 Player_snake::Player_snake(int number_of_body_parts, const Sprite_specification& sprite_specification)
     : Creature(number_of_body_parts, sprite_specification, std::make_shared<Player_input_controller>())
 {
+    m_stats.attack_damage.set_base_value(20.0f);
 }
 
 void Player_snake::die()
