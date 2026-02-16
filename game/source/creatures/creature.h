@@ -30,7 +30,7 @@ class Creature : public Turn_based_entity
     std::shared_ptr<Body_part> create_body_part();
     void add_body_part(std::shared_ptr<Body_part> body_part);
 
-    virtual void on_body_part_death(std::shared_ptr<Body_part> dead_body_part);
+    void on_body_part_death(std::shared_ptr<Body_part> dead_body_part);
 
     void perform_input_action(std::shared_ptr<Input_action> input_action) override;
     Action_result on_direction_input(const Direction& direction);

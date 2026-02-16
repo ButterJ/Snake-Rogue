@@ -3,7 +3,6 @@
 #include "direction_input_action.h"
 #include "dungeon_layer.h"
 #include "floor.h"
-#include "player_input_controller.h" // ! TODO temporary for testing, the creature class itself should not have this
 
 Creature::Creature(int number_of_body_parts, const Sprite_specification& sprite_specification, std::shared_ptr<Input_controller> input_controller)
     : Turn_based_entity(input_controller)

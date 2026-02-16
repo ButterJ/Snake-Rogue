@@ -7,7 +7,7 @@
 
 #include <memory>
 
-class Turn_based_entity
+class Turn_based_entity : public std::enable_shared_from_this<Turn_based_entity>
 {
   public:
     enum Tick_result

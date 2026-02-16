@@ -1,5 +1,7 @@
 #include "stat.h"
 
+#include "timed_stat_modifier.h"
+
 #include <algorithm>
 
 Stat::Stat(float value, std::optional<float> minimum_value, std::optional<float> maximum_value)
@@ -31,9 +33,30 @@ float Stat::get_value() const
     return m_value;
 }
 
-void Stat::apply_modifier(Stat_modifier modifier)
+void Stat::apply_modifier(std::shared_ptr<Stat_modifier> modifier)
 {
-    m_modifiers.push_back(modifier);
+    m_modifiers.insert(modifier);
+
+    auto timed_modifier { std::dynamic_pointer_cast<Timed_stat_modifier>(modifier) };
+    if (timed_modifier)
+    {
+        auto on_modifier_expired_lambda { [this, timed_modifier]()
+                                          { remove_modifier(timed_modifier); } };
+        timed_modifier->On_expired_callback.append(on_modifier_expired_lambda);
+    }
+
+    float new_value { recalculate_value() };
+    set_value(new_value);
+}
+
+void Stat::remove_modifier(std::shared_ptr<Stat_modifier> modifier)
+{
+    auto it { m_modifiers.find(modifier) };
+
+    if (it != m_modifiers.end())
+    {
+        m_modifiers.erase(it);
+    }
 
     float new_value { recalculate_value() };
     set_value(new_value);
@@ -48,14 +71,14 @@ float Stat::recalculate_value()
 
     for (const auto& modifier : m_modifiers)
     {
-        if (modifier.type == Stat_modifier::Type::percent_multiplicative)
+        if (modifier->get_type() == Stat_modifier::Type::percent_multiplicative)
         {
-            product_percent_multiplicative *= 1 + modifier.value;
+            product_percent_multiplicative *= 1 + modifier->get_value();
         }
         else
         {
-            float& sum_to_add_to { modifier.type == Stat_modifier::Type::flat ? sum_flat : sum_percent_additive };
-            sum_to_add_to += modifier.value;
+            float& sum_to_add_to { modifier->get_type() == Stat_modifier::Type::flat ? sum_flat : sum_percent_additive };
+            sum_to_add_to += modifier->get_value();
         }
     }
 
