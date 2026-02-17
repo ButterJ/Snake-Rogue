@@ -24,7 +24,8 @@ class Dungeon_layer : public Core::Layer
     void render_map_tiles();
 
     std::shared_ptr<Player_snake> m_snake {};
-    std::shared_ptr<Simple_enemy> m_enemy {};
+    std::shared_ptr<Simple_enemy> m_enemy_01 {};
+    std::shared_ptr<Simple_enemy> m_enemy_02 {};
 
     Turn_based_system m_turn_based_system {};
 
