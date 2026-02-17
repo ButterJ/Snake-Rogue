@@ -1,7 +1,9 @@
 #include "apple.h"
 
-Apple::Apple(const Position& position, const Sprite_specification& sprite_specification, int satiation)
-    : Food(position, sprite_specification, satiation)
+#include "spritesheet.h"
+
+Apple::Apple(const Position& position, int satiation)
+    : Food(position, create_sprite_specification(), satiation)
 {
 }
 
@@ -12,4 +14,10 @@ void Apple::eat(std::shared_ptr<Turn_based_entity> turn_based_entity, Resource_b
     auto& health_regeneration_stat { creature_stats.health_regeneration };
     auto health_regeneration_modifier { std::make_shared<Timed_stat_modifier>(Stat_modifier::Type::flat, 5.0, 3, turn_based_entity) };
     health_regeneration_stat.apply_modifier(health_regeneration_modifier);
+}
+
+Sprite_specification Apple::create_sprite_specification()
+{
+    static Spritesheet spritesheet { "data/apple.png", 16.0f, 16.0f };
+    return spritesheet.get_sprite_specification(0, 0);
 }

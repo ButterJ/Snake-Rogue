@@ -9,7 +9,10 @@
 class Apple : public Food
 {
   public:
-    Apple(const Position& position, const Sprite_specification& sprite_specification, int satiation);
+    Apple(const Position& position, int satiation);
 
     void eat(std::shared_ptr<Turn_based_entity> turn_based_entity, Resource_bar& satiation_bar, Creature_stats& creature_stats) override;
+
+  private:
+    static Sprite_specification create_sprite_specification();
 };
