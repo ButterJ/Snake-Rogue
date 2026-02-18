@@ -3,6 +3,7 @@
 #include "direction_input_action.h"
 #include "dungeon_layer.h"
 #include "floor.h"
+#include "waiting_action.h"
 
 Creature::Creature(int number_of_body_parts, const Sprite_specification& sprite_specification, std::shared_ptr<Input_controller> input_controller)
     : Turn_based_entity(input_controller)
@@ -70,6 +71,13 @@ Position Creature::get_head_position() const
 
 Action_result Creature::perform_input_action(std::shared_ptr<Input_action> input_action)
 {
+    auto waiting_action { std::dynamic_pointer_cast<Waiting_action>(input_action) };
+
+    if (waiting_action)
+    {
+        return Action_result::success;
+    }
+
     auto direction_input_action { std::dynamic_pointer_cast<Direction_input_action>(input_action) };
 
     if (direction_input_action)

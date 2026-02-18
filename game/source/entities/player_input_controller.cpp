@@ -2,6 +2,7 @@
 
 #include "direction.h"
 #include "direction_input_action.h"
+#include "waiting_action.h"
 
 #include <SDL3/SDL_keyboard.h>
 
@@ -16,7 +17,7 @@ void Player_input_controller::process_input()
 
     if (key_states[SDL_SCANCODE_PERIOD])
     {
-        // TODO: call wait action
+        On_action_decided(std::make_shared<Waiting_action>());
         return;
     }
 
