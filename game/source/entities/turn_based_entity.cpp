@@ -10,8 +10,12 @@ Turn_based_entity::Turn_based_entity(std::shared_ptr<Input_controller> input_con
 
     auto perform_input_action_lambda { [this](std::shared_ptr<Input_action> input_action)
                                        {
-                                           perform_input_action(input_action);
-                                           on_turn_finished(); // TODO: An action might not finish a turn
+                                           Action_result action_result { perform_input_action(input_action) };
+
+                                           if (action_result == Action_result::success)
+                                           {
+                                               on_turn_finished();
+                                           }
                                        } };
 
     input_controller->On_action_decided.append(perform_input_action_lambda);

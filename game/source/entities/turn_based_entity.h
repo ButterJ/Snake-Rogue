@@ -1,5 +1,6 @@
 #pragma once
 
+#include "action_result.h"
 #include "input_action.h"
 #include "input_controller.h"
 
@@ -31,7 +32,7 @@ class Turn_based_entity : public std::enable_shared_from_this<Turn_based_entity>
     void start_turn(); // TODO: Make return type that gives information whether the turn got finished immediately?
     virtual void on_turn_finished();
 
-    virtual void perform_input_action(std::shared_ptr<Input_action> input_action) = 0;
+    virtual Action_result perform_input_action(std::shared_ptr<Input_action> input_action) = 0;
 
     virtual void die();
 

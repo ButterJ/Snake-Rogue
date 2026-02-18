@@ -68,14 +68,16 @@ Position Creature::get_head_position() const
     return m_last_position;
 }
 
-void Creature::perform_input_action(std::shared_ptr<Input_action> input_action)
+Action_result Creature::perform_input_action(std::shared_ptr<Input_action> input_action)
 {
     auto direction_input_action { std::dynamic_pointer_cast<Direction_input_action>(input_action) };
 
     if (direction_input_action)
     {
-        on_direction_input(direction_input_action->get_direction());
+        return on_direction_input(direction_input_action->get_direction());
     }
+
+    return Action_result::failure;
 }
 
 Action_result Creature::on_direction_input(const Direction& direction)
@@ -108,7 +110,6 @@ Action_result Creature::attack(const Direction& direction)
     if (body_part_to_attack)
     {
         auto damage { static_cast<int>(m_stats.attack_damage.get_value()) };
-        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, std::to_string(damage).c_str()); // !Temporary
         body_part_to_attack->change_health(-damage);
 
         return Action_result::success;
