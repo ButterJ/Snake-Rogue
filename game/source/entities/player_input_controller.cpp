@@ -44,8 +44,7 @@ void Player_input_controller::process_input()
     if (direction_input != Direction::Zero)
     {
         auto direction_input_action { std::make_shared<Direction_input_action>(direction_input) };
-        auto input_action { std::dynamic_pointer_cast<Input_action>(direction_input_action) };
-        On_action_decided(input_action); // TODO: Try giving direction_input_action as parameter
+        On_action_decided(direction_input_action);
         return;
     }
 

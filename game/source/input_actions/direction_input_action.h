@@ -4,7 +4,6 @@
 
 #include "direction.h"
 
-// TODO: Split up into header and source
 class Direction_input_action : public Input_action
 {
   public:
@@ -13,7 +12,7 @@ class Direction_input_action : public Input_action
     {
     }
 
-    const Direction get_direction() const { return m_direction; } // TODO: Consider returning const reference
+    const Direction get_direction() const; // TODO: Consider returning const reference
 
   private:
     Direction m_direction;
